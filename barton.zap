@@ -1,6 +1,6 @@
 {
   "fileFormat": 2,
-  "featureLevel": 107,
+  "featureLevel": 103,
   "creator": "zap",
   "keyValuePairs": [
     {
@@ -13,17 +13,17 @@
     },
     {
       "key": "manufacturerCodes",
-      "value": "0x1002"
+      "value": "0x111D"
     }
   ],
   "package": [
     {
       "pathRelativity": "relativeToZap",
-      "path": "../matter/connectedhomeip/src/app/zap-templates/zcl/zcl-with-test-extensions.json",
+      "path": "zcl.json",
       "type": "zcl-properties",
       "category": "matter",
       "version": 1,
-      "description": "Matter SDK ZCL data with some extensions"
+      "description": "Matter SDK ZCL data"
     }
   ],
   "endpointTypes": [
