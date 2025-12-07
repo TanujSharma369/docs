@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".matter.casting.ManualCommissioningFragment">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Manual Commissioning Mode"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:paddingBottom="16dp" />
+        
+        <TextView
+            android:id="@+id/manualCommissioningInfoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loading commissioning parameters..."
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:paddingBottom="16dp"
+            android:background="#F0F0F0"
+            android:padding="12dp" />
+        
+        <Button
+            android:id="@+id/openCommissioningWindowButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Open Commissioning Window"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+        
+        <Button
+            android:id="@+id/closeCommissioningWindowButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Close Commissioning Window"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="8dp"
+            android:enabled="false" />
+        
+        <Button
+            android:id="@+id/showOnboardingPayloadButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Onboarding Payload (Check Logcat)"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="16dp" />
+        
+        <TextView
+            android:id="@+id/manualCommissioningStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status will appear here"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:minHeight="150dp" />
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="How to use Manual Commissioning:"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:text="1. Click 'Open Commissioning Window' above\n\n2. The app will advertise itself on your network as a commissionable Matter node\n\n3. Use your custom Matter commissioner to discover this device (look for service type _matterc._udp)\n\n4. Commission the device using the setup passcode and discriminator shown above\n\n5. Once commissioned, you can send commands to this app\n\nNote: The commissioning window will automatically close after 3 minutes for security reasons." />
+        
+    </LinearLayout>
+</ScrollView>
