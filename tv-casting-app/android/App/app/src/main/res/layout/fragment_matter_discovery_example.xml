@@ -14,6 +14,66 @@
         tools:layout_editor_absoluteY="1dp"
         android:padding="10sp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Manual Commissioning"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/manualCommissioningCodeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="QR Code: MT:-24J0AFN00YZ.548G00"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:padding="12dp"
+            android:background="#F0F0F0"
+            android:textIsSelectable="true"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/commissioningInfoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loading commissioning info..."
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/openCommissioningWindowButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Open Commissioning Window"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/commissioningStatusTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Click button above to make this app discoverable"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCCCC"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Commissioner Discovery (UDC)"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
         <Button
             android:enabled="true"
             android:id="@+id/startDiscoveryButton"

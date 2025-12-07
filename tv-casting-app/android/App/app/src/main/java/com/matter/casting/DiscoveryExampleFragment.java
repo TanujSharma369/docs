@@ -171,6 +171,9 @@ public class DiscoveryExampleFragment extends Fragment {
 
     Log.d(TAG, "onViewCreated() creating callbacks");
 
+    // Setup manual commissioning section
+    setupManualCommissioningSection();
+
     Button startDiscoveryButton = getView().findViewById(R.id.startDiscoveryButton);
     startDiscoveryButton.setOnClickListener(
         v -> {
@@ -392,5 +395,61 @@ class CastingPlayerArrayAdapter extends ArrayAdapter<CastingPlayer> {
 
     aux = aux.isEmpty() ? aux : "\n" + aux;
     return main + aux;
+  }
+
+  /**
+   * Sets up the manual commissioning section with QR code, commissioning info,
+   * and button to open commissioning window
+   */
+  private void setupManualCommissioningSection() {
+    TextView commissioningInfoTextView = getView().findViewById(R.id.commissioningInfoTextView);
+    TextView commissioningStatusTextView = getView().findViewById(R.id.commissioningStatusTextView);
+    Button openCommissioningWindowButton = getView().findViewById(R.id.openCommissioningWindowButton);
+
+    // Display commissioning parameters
+    long setupPasscode = InitializationExample.commissionableDataProvider.get().getSetupPasscode();
+    int discriminator = InitializationExample.commissionableDataProvider.get().getDiscriminator();
+    
+    String infoText = "Passcode: " + setupPasscode + " | Discriminator: " + discriminator;
+    commissioningInfoTextView.setText(infoText);
+
+    // Setup button click listener
+    openCommissioningWindowButton.setOnClickListener(v -> {
+      Log.i(TAG, "Opening commissioning window for manual commissioning");
+      commissioningStatusTextView.setText("Opening commissioning window...");
+      openCommissioningWindowButton.setEnabled(false);
+
+      new Thread(() -> {
+        MatterError err = ManualCommissioningHelper.openBasicCommissioningWindow();
+        
+        getActivity().runOnUiThread(() -> {
+          if (err.hasNoError()) {
+            commissioningStatusTextView.setText(
+              "✓ Commissioning window opened!\n" +
+              "App is now discoverable for 3 minutes.\n" +
+              "Your commissioner can discover and commission this app."
+            );
+            Log.i(TAG, "Successfully opened commissioning window");
+          } else {
+            commissioningStatusTextView.setText(
+              "✗ Failed to open commissioning window: " + err.getErrorMessage()
+            );
+            openCommissioningWindowButton.setEnabled(true);
+            Log.e(TAG, "Failed to open commissioning window: " + err);
+          }
+        });
+      }).start();
+    });
+
+    // Check if window is already open
+    new Thread(() -> {
+      boolean isOpen = ManualCommissioningHelper.isCommissioningWindowOpen();
+      getActivity().runOnUiThread(() -> {
+        if (isOpen) {
+          commissioningStatusTextView.setText("ℹ Commissioning window is already open");
+          openCommissioningWindowButton.setEnabled(false);
+        }
+      });
+    }).start();
   }
 }
