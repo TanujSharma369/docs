@@ -124,7 +124,7 @@ public class ManualCommissioningFragment extends Fragment {
                 } else {
                     statusTextView.setText(
                         "✗ Failed to open commissioning window\n\n" +
-                        "Error: " + err.getMessage()
+                        "Error: " + err.getErrorMessage()
                     );
                     Log.e(TAG, "Failed to open commissioning window: " + err);
                 }
@@ -149,7 +149,7 @@ public class ManualCommissioningFragment extends Fragment {
                 } else {
                     statusTextView.setText(
                         "✗ Failed to close commissioning window\n\n" +
-                        "Error: " + err.getMessage()
+                        "Error: " + err.getErrorMessage()
                     );
                     Log.e(TAG, "Failed to close commissioning window: " + err);
                 }
