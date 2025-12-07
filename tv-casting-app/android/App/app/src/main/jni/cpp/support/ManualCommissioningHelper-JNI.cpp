@@ -112,19 +112,11 @@ JNI_METHOD(jobject, closeCommissioningWindow)(JNIEnv * env, jclass)
     chip::DeviceLayer::StackLock lock;
     ChipLogProgress(AppServer, "ManualCommissioningHelper::closeCommissioningWindow() called");
 
-    CHIP_ERROR err = chip::Server::GetInstance().GetCommissioningWindowManager().CloseCommissioningWindow();
+    chip::Server::GetInstance().GetCommissioningWindowManager().CloseCommissioningWindow();
+    
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::closeCommissioningWindow() Successfully closed commissioning window");
 
-    if (err == CHIP_NO_ERROR)
-    {
-        ChipLogProgress(AppServer, "ManualCommissioningHelper::closeCommissioningWindow() Successfully closed commissioning window");
-    }
-    else
-    {
-        ChipLogError(AppServer, "ManualCommissioningHelper::closeCommissioningWindow() Failed to close commissioning window: %" CHIP_ERROR_FORMAT,
-                     err.Format());
-    }
-
-    return matter::casting::support::convertMatterErrorFromCppToJava(err);
+    return matter::casting::support::convertMatterErrorFromCppToJava(CHIP_NO_ERROR);
 }
 
 JNI_METHOD(void, logOnboardingPayload)(JNIEnv * env, jclass)
