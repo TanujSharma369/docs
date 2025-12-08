@@ -22,8 +22,7 @@
             android:padding="12dp"
             android:background="#FFFFFF"
             android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:elevation="2dp"/>
+            android:gravity="center"/>
 
         <!-- Remote Control Panel -->
         <LinearLayout
@@ -33,7 +32,6 @@
             android:orientation="vertical"
             android:background="#2C2C2C"
             android:padding="24dp"
-            android:elevation="4dp"
             android:visibility="visible">
 
             <!-- Power Button -->
