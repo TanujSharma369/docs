@@ -410,7 +410,7 @@ public class DiscoveryExampleFragment extends Fragment {
           );
           
           // Show dialog with command options
-          new AlertDialog.Builder(requireContext())
+          new android.app.AlertDialog.Builder(requireContext())
             .setTitle("Device Ready")
             .setMessage("The STB has commissioned this app successfully.\n\nThe connection is established and ready.\n\nWould you like to send a test command?")
             .setPositiveButton("Send Test LaunchURL", (dialog, which) -> {
