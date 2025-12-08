@@ -50,14 +50,6 @@
             android:text="Open Commissioning Window"
             android:layout_marginBottom="4dp" />
 
-        <Button
-            android:id="@+id/checkCommissionedDeviceButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Check for Commissioned Device"
-            android:layout_marginBottom="4dp"
-            android:backgroundTint="#4CAF50" />
-
         <TextView
             android:id="@+id/commissioningStatusTextView"
             android:layout_width="match_parent"
@@ -77,44 +69,26 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Commissioner Discovery (UDC)"
+            android:text="Control Options"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold"
             android:paddingBottom="8dp" />
 
         <Button
-            android:enabled="true"
-            android:id="@+id/startDiscoveryButton"
+            android:id="@+id/virtualRemoteButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/matter_start_discovery_button_text" />
+            android:text="Virtual Remote Control"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="#2196F3" />
 
         <Button
-            android:enabled="true"
-            android:id="@+id/stopDiscoveryButton"
+            android:id="@+id/appLauncherButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/matter_stop_discovery_button_text" />
-
-        <Button
-            android:id="@+id/clearDiscoveryResultsButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/matter_clear_results_button_text" />
-
-        <TextView
-            android:id="@+id/matterDiscoveryMessageTextView"
-            android:text="string/matter_discovery_message_default_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <ListView
-            android:id = "@+id/castingPlayerList"
-            android:layout_width = "match_parent"
-            android:layout_height = "wrap_content"
-            android:fadeScrollbars = "false" />
+            android:text="Application Launcher"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="#FF9800" />
     </LinearLayout>
 
     <TextView

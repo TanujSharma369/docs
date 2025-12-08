@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Application Launcher"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="8dp"/>
+
+        <!-- Device Status -->
+        <TextView
+            android:id="@+id/appLauncherDeviceStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Checking device connection..."
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:background="#FFFFFF"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"/>
+
+        <!-- Instructions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Launch or stop applications on your STB using the ApplicationLauncher cluster."
+            android:textSize="14sp"
+            android:padding="12dp"
+            android:background="#E3F2FD"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Input Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- Catalog Vendor ID -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Catalog Vendor ID"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:paddingBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/catalogVendorIdInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter catalog vendor ID (e.g., 0)"
+                android:inputType="number"
+                android:padding="12dp"
+                android:background="@android:drawable/edit_text"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Application ID -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Application ID"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:paddingBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/applicationIdInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter application ID (e.g., YouTube)"
+                android:inputType="text"
+                android:padding="12dp"
+                android:background="@android:drawable/edit_text"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Common apps: YouTube, Netflix, Prime Video, Disney+"
+                android:textSize="12sp"
+                android:textColor="#666666"
+                android:paddingBottom="8dp"/>
+        </LinearLayout>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/launchAppButton"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="LAUNCH APP"
+                android:textStyle="bold"
+                android:background="@android:color/holo_green_dark"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/stopAppButton"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="STOP APP"
+                android:textStyle="bold"
+                android:background="@android:color/holo_red_dark"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <!-- Status Display -->
+        <TextView
+            android:id="@+id/appLauncherStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ready to launch applications"
+            android:textSize="14sp"
+            android:padding="16dp"
+            android:background="#FFF9C4"
+            android:gravity="center"
+            android:textStyle="italic"/>
+
+        <!-- Help Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Example Usage"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Launch YouTube: catalogVendorID=0, applicationID=YouTube\n• Stop YouTube: catalogVendorID=0, applicationID=YouTube\n\nThe ApplicationLauncher cluster will send the launch/stop command to the STB."
+            android:textSize="12sp"
+            android:background="#FFFFFF"
+            android:padding="12dp"
+            android:lineSpacingMultiplier="1.3"/>
+
+    </LinearLayout>
+</ScrollView>

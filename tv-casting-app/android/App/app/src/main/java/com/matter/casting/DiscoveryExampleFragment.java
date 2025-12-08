@@ -155,47 +155,17 @@ public class DiscoveryExampleFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     Log.i(TAG, "onViewCreated() called");
 
-    matterDiscoveryMessageTextView =
-        getActivity().findViewById(R.id.matterDiscoveryMessageTextView);
-    matterDiscoveryMessageTextView.setText(
-        getString(R.string.matter_discovery_message_initializing_text));
-
-    matterDiscoveryErrorMessageTextView =
-        getActivity().findViewById(R.id.matterDiscoveryErrorTextView);
-    matterDiscoveryErrorMessageTextView.setText(
-        getString(R.string.matter_discovery_error_message_initial));
-
-    arrayAdapter = new CastingPlayerArrayAdapter(getActivity(), castingPlayerList);
-    final ListView list = getActivity().findViewById(R.id.castingPlayerList);
-    list.setAdapter(arrayAdapter);
-
     Log.d(TAG, "onViewCreated() creating callbacks");
 
     // Setup manual commissioning section
     setupManualCommissioningSection();
     
-    // Setup check commissioned device button
-    setupCheckCommissionedDeviceButton();
-
-    Button startDiscoveryButton = getView().findViewById(R.id.startDiscoveryButton);
-    startDiscoveryButton.setOnClickListener(
-        v -> {
-          Log.i(
-              TAG, "onViewCreated() startDiscoveryButton button clicked. Calling startDiscovery()");
-          if (!startDiscovery()) {
-            Log.e(TAG, "onViewCreated() startDiscovery() call Failed");
-          }
-        });
-
-    Button stopDiscoveryButton = getView().findViewById(R.id.stopDiscoveryButton);
-    stopDiscoveryButton.setOnClickListener(
-        v -> {
-          Log.i(TAG, "onViewCreated() stopDiscoveryButton button clicked. Calling stopDiscovery()");
-          stopDiscovery();
-        });
+    // Setup navigation buttons
+    setupNavigationButtons();
 
     Button clearDiscoveryResultsButton = getView().findViewById(R.id.clearDiscoveryResultsButton);
-    clearDiscoveryResultsButton.setOnClickListener(
+    if (clearDiscoveryResultsButton != null) {
+      clearDiscoveryResultsButton.setOnClickListener(
         v -> {
           Log.i(
               TAG, "onViewCreated() clearDiscoveryResultsButton button clicked. Clearing results");
@@ -375,92 +345,57 @@ public class DiscoveryExampleFragment extends Fragment {
    * Sets up the "Check for Commissioned Device" button to detect if this app
    * was commissioned externally (e.g., by an STB) and navigate to command interface
    */
-  private void setupCheckCommissionedDeviceButton() {
-    Button checkCommissionedDeviceButton = getView().findViewById(R.id.checkCommissionedDeviceButton);
+  private void setupNavigationButtons() {
+    Button virtualRemoteButton = getView().findViewById(R.id.virtualRemoteButton);
+    Button appLauncherButton = getView().findViewById(R.id.appLauncherButton);
     TextView commissioningStatusTextView = getView().findViewById(R.id.commissioningStatusTextView);
     
-    checkCommissionedDeviceButton.setOnClickListener(v -> {
-      Log.i(TAG, "Checking for commissioned video player");
-      commissioningStatusTextView.setText("Checking for commissioned device...");
+    // Virtual Remote button - navigate to RemoteControlFragment
+    virtualRemoteButton.setOnClickListener(v -> {
+      Log.i(TAG, "Virtual Remote button clicked");
       
-      new Thread(() -> {
-        // Check if we have commissioned video player from OnConnectionSuccess callback
-        boolean hasPlayer = ManualCommissioningHelper.hasCommissionedVideoPlayer();
-        String playerInfo = ManualCommissioningHelper.getCommissionedVideoPlayerInfo();
-        
-        getActivity().runOnUiThread(() -> {
-          if (!hasPlayer || playerInfo == null) {
-            commissioningStatusTextView.setText(
-              "✗ No commissioned device found.\n\n" +
-              "Steps:\n" +
-              "1. Click 'Open Commissioning Window' above\n" +
-              "2. Commission this app from your STB\n" +
-              "3. After commissioning succeeds, click this button again"
-            );
-            Log.i(TAG, "No commissioned video player available");
-            return;
-          }
-          
-          Log.i(TAG, "Found commissioned video player: " + playerInfo);
-          
-          commissioningStatusTextView.setText(
-            "✓ Device commissioned successfully!\n" +
-            playerInfo + "\n\n" +
-            "You can now send commands to the STB."
-          );
-          
-          // Show dialog with command options
-          new android.app.AlertDialog.Builder(requireContext())
-            .setTitle("Device Ready")
-            .setMessage("The STB has commissioned this app successfully.\n\nThe connection is established and ready.\n\nWhat would you like to do?")
-            .setPositiveButton("Virtual Remote", (dialog, which) -> {
-              Log.i(TAG, "Opening Virtual Remote Controller");
-              // Navigate to RemoteControlFragment
-              if (getActivity() != null) {
-                getActivity().getSupportFragmentManager()
-                  .beginTransaction()
-                  .replace(R.id.main_fragment_container, new RemoteControlFragment())
-                  .addToBackStack(null)
-                  .commit();
-              }
-            })
-            .setNeutralButton("Test LaunchURL", (dialog, which) -> {
-              Log.i(TAG, "Sending test LaunchURL command to commissioned STB");
-              commissioningStatusTextView.setText("Sending LaunchURL command...");
-              
-              new Thread(() -> {
-                MatterError err = ManualCommissioningHelper.sendLaunchURLCommand(
-                  "https://www.example.com",
-                  "Test URL from Android TV Casting App"
-                );
-                
-                getActivity().runOnUiThread(() -> {
-                  if (err.getErrorCode() == 0) {
-                    commissioningStatusTextView.setText(
-                      "✓ LaunchURL command sent successfully!\n\n" +
-                      "Check your STB to see if it opened the URL.\n\n" +
-                      playerInfo
-                    );
-                    Log.i(TAG, "LaunchURL command sent successfully");
-                  } else {
-                    commissioningStatusTextView.setText(
-                      "✗ Failed to send command: " + err.getErrorMessage()
-                    );
-                    Log.e(TAG, "Failed to send LaunchURL: " + err.getErrorMessage());
-                  }
-                });
-              }).start();
-            })
-            .setNegativeButton("Not Now", (dialog, which) -> {
-              commissioningStatusTextView.setText(
-                "✓ Device commissioned and ready!\n\n" +
-                playerInfo + "\n\n" +
-                "Click the button above to send commands anytime."
-              );
-            })
-            .show();
-        });
-      }).start();
+      // Check if device is commissioned
+      boolean hasPlayer = ManualCommissioningHelper.hasCommissionedVideoPlayer();
+      if (!hasPlayer) {
+        commissioningStatusTextView.setText(
+          "✗ No commissioned device found.\n\n" +
+          "Please open commissioning window and commission from your STB first."
+        );
+        return;
+      }
+      
+      // Navigate to RemoteControlFragment
+      if (getActivity() != null) {
+        getActivity().getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.main_fragment_container, new RemoteControlFragment())
+          .addToBackStack(null)
+          .commit();
+      }
+    });
+    
+    // Application Launcher button - navigate to AppLauncherFragment
+    appLauncherButton.setOnClickListener(v -> {
+      Log.i(TAG, "Application Launcher button clicked");
+      
+      // Check if device is commissioned
+      boolean hasPlayer = ManualCommissioningHelper.hasCommissionedVideoPlayer();
+      if (!hasPlayer) {
+        commissioningStatusTextView.setText(
+          "✗ No commissioned device found.\n\n" +
+          "Please open commissioning window and commission from your STB first."
+        );
+        return;
+      }
+      
+      // Navigate to AppLauncherFragment
+      if (getActivity() != null) {
+        getActivity().getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.main_fragment_container, new AppLauncherFragment())
+          .addToBackStack(null)
+          .commit();
+      }
     });
   }
 
