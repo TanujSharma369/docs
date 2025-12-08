@@ -419,7 +419,7 @@ public class DiscoveryExampleFragment extends Fragment {
               if (getActivity() != null) {
                 getActivity().getSupportFragmentManager()
                   .beginTransaction()
-                  .replace(R.id.main_fragment, new RemoteControlFragment())
+                  .replace(R.id.main_fragment_container, new RemoteControlFragment())
                   .addToBackStack(null)
                   .commit();
               }

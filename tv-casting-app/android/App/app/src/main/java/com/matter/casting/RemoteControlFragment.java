@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.R;
-import com.matter.casting.support.CommissionedDeviceHelper;
 
 /**
  * Remote Control Fragment - Provides a virtual TV remote interface to send KeypadInput commands
@@ -81,8 +80,8 @@ public class RemoteControlFragment extends Fragment {
   }
   
   private void checkDeviceConnection() {
-    if (CommissionedDeviceHelper.hasCommissionedDevice()) {
-      String deviceInfo = CommissionedDeviceHelper.getCommissionedDeviceInfo();
+    if (ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
+      String deviceInfo = ManualCommissioningHelper.getCommissionedVideoPlayerInfo();
       deviceStatusText.setText("Connected to: " + deviceInfo);
       deviceStatusText.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
       remoteControlPanel.setVisibility(View.VISIBLE);
