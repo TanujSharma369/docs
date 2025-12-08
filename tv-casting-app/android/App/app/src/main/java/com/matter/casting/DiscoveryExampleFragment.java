@@ -162,17 +162,6 @@ public class DiscoveryExampleFragment extends Fragment {
     
     // Setup navigation buttons
     setupNavigationButtons();
-
-    Button clearDiscoveryResultsButton = getView().findViewById(R.id.clearDiscoveryResultsButton);
-    if (clearDiscoveryResultsButton != null) {
-      clearDiscoveryResultsButton.setOnClickListener(
-        v -> {
-          Log.i(
-              TAG, "onViewCreated() clearDiscoveryResultsButton button clicked. Clearing results");
-          arrayAdapter.clear();
-          matterDiscoveryErrorMessageTextView.setText(
-              getString(R.string.matter_discovery_error_message_initial));
-        });
   }
 
   @Override
