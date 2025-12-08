@@ -46,6 +46,10 @@ public class DiscoveryExampleFragment extends Fragment {
   private static final int DISCOVERY_RUNTIME_SEC = 15;
   private static final List<CastingPlayer> castingPlayerList = new ArrayList<>();
   private static ArrayAdapter<CastingPlayer> arrayAdapter;
+  
+  // Handler for periodic connection status updates
+  private android.os.Handler connectionStatusHandler;
+  private Runnable connectionStatusUpdateRunnable;
 
   // Get a singleton instance of the MatterCastingPlayerDiscovery
   private static final CastingPlayerDiscovery matterCastingPlayerDiscovery =
@@ -171,13 +175,16 @@ public class DiscoveryExampleFragment extends Fragment {
     super.onResume();
     // Update connection status when returning to this screen
     updateConnectionStatus();
+    // Start periodic connection status monitoring
+    startConnectionStatusMonitoring();
   }
 
   @Override
   public void onPause() {
     super.onPause();
     Log.i(TAG, "DiscoveryExampleFragment onPause() called");
-    // Manual commissioning mode - no discovery to stop
+    // Stop periodic connection status monitoring
+    stopConnectionStatusMonitoring();
   }
 
   /** Interface for notifying the host. */
@@ -214,6 +221,40 @@ public class DiscoveryExampleFragment extends Fragment {
         });
       }
     }).start();
+  }
+
+  /**
+   * Starts periodic monitoring of connection status (checks every 2 seconds)
+   */
+  private void startConnectionStatusMonitoring() {
+    if (connectionStatusHandler == null) {
+      connectionStatusHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    }
+    
+    connectionStatusUpdateRunnable = new Runnable() {
+      @Override
+      public void run() {
+        updateConnectionStatus();
+        // Schedule next update in 2 seconds
+        if (connectionStatusHandler != null) {
+          connectionStatusHandler.postDelayed(this, 2000);
+        }
+      }
+    };
+    
+    // Start the periodic updates
+    connectionStatusHandler.post(connectionStatusUpdateRunnable);
+    Log.i(TAG, "Started connection status monitoring");
+  }
+
+  /**
+   * Stops periodic monitoring of connection status
+   */
+  private void stopConnectionStatusMonitoring() {
+    if (connectionStatusHandler != null && connectionStatusUpdateRunnable != null) {
+      connectionStatusHandler.removeCallbacks(connectionStatusUpdateRunnable);
+      Log.i(TAG, "Stopped connection status monitoring");
+    }
   }
 
   /**
