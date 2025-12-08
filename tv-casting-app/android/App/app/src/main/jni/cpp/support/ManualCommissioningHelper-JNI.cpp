@@ -21,8 +21,11 @@
 
 #include <app/server/Server.h>
 #include <platform/CHIPDeviceLayer.h>
+#include <CastingServer.h>
+#include <TargetVideoPlayerInfo.h>
 
 #include "../support/Converters-JNI.h"
+#include "../core/CastingPlayerDiscovery-JNI.h"
 
 #define JNI_METHOD(RETURN, METHOD_NAME) \
     extern "C" JNIEXPORT RETURN JNICALL Java_com_matter_casting_ManualCommissioningHelper_##METHOD_NAME
@@ -31,7 +34,46 @@ using namespace chip;
 
 namespace {
 // Default commissioning window timeout: 3 minutes (180 seconds)
-constexpr uint16_t kDefaultCommissioningWindowTimeout = 3 * 60;
+JNI_METHOD(jobject, openBasicCommissioningWindow)(JNIEnv * env, jclass)
+{
+    chip::DeviceLayer::StackLock lock;
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::openBasicCommissioningWindow() called");
+
+    // Use CastingServer's OpenBasicCommissioningWindow with callbacks (like Linux app does)
+    // This will give us the TargetVideoPlayerInfo when commissioning succeeds
+    CastingServer::GetInstance()->Init();
+    
+    CommissioningCallbacks commissioningCallbacks;
+    commissioningCallbacks.commissioningComplete = OnCommissioningComplete;
+    
+    CHIP_ERROR err = CastingServer::GetInstance()->OpenBasicCommissioningWindow(
+        commissioningCallbacks, OnConnectionSuccess, OnConnectionFailure, OnNewOrUpdatedEndpoint);
+
+    if (err == CHIP_NO_ERROR)
+    {
+        ChipLogProgress(AppServer,
+                        "ManualCommissioningHelper::openBasicCommissioningWindow() Successfully opened commissioning window for %d "
+                        "seconds",
+                        kDefaultCommissioningWindowTimeout);
+        // Log the onboarding payload for debugging
+        chip::DeviceLayer::ConfigurationMgr().LogDeviceConfig();
+    }
+    else
+    {
+        ChipLogError(AppServer, "ManualCommissioningHelper::openBasicCommissioningWindow() Failed to open commissioning window: %" CHIP_ERROR_FORMAT,
+                     err.Format());
+    }
+
+    return matter::casting::support::convertMatterErrorFromCppToJava(err);
+}   ChipLogError(AppServer, "ManualCommissioningHelper::OnConnectionFailure error: %" CHIP_ERROR_FORMAT, err.Format());
+}
+
+// Callback when new endpoint is discovered
+void OnNewOrUpdatedEndpoint(TargetEndpointInfo * endpoint)
+{
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::OnNewOrUpdatedEndpoint called for endpoint ID: %d", endpoint->GetEndpointId());
+}
+
 } // namespace
 
 JNI_METHOD(jobject, openBasicCommissioningWindow)(JNIEnv * env, jclass)
