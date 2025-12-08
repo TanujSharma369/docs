@@ -22,6 +22,10 @@ import com.matter.casting.support.CommissionedDeviceHelper;
 public class RemoteControlFragment extends Fragment {
   private static final String TAG = RemoteControlFragment.class.getSimpleName();
   
+  static {
+    System.loadLibrary("TvCastingApp");
+  }
+  
   private TextView deviceStatusText;
   private View remoteControlPanel;
   

@@ -5,16 +5,14 @@
  * Calls CastingServer::KeypadInput_SendKey() to send remote control commands.
  */
 
-#include "JNIUtils.h"
-#include "support/CastingStore.h"
-#include <app/clusters/bindings/BindingManager.h>
 #include <jni.h>
-#include <lib/support/CHIPJNIError.h>
 #include <lib/support/JniReferences.h>
 #include <lib/support/JniTypeWrappers.h>
 
-#include "include/CastingServer.h"
-#include "include/TargetVideoPlayerInfo.h"
+#include <app/server/Server.h>
+#include <platform/CHIPDeviceLayer.h>
+#include <CastingServer.h>
+#include <TargetVideoPlayerInfo.h>
 
 using namespace chip;
 
