@@ -44,8 +44,6 @@ public class DiscoveryExampleFragment extends Fragment {
   // 35 represents device type of Matter Casting Player
   private static final Long DISCOVERY_TARGET_DEVICE_TYPE = 35L;
   private static final int DISCOVERY_RUNTIME_SEC = 15;
-  private TextView matterDiscoveryMessageTextView;
-  public static TextView matterDiscoveryErrorMessageTextView;
   private static final List<CastingPlayer> castingPlayerList = new ArrayList<>();
   private static ArrayAdapter<CastingPlayer> arrayAdapter;
 
@@ -168,23 +166,14 @@ public class DiscoveryExampleFragment extends Fragment {
   public void onResume() {
     Log.i(TAG, "onResume() called");
     super.onResume();
-    MatterError err =
-        matterCastingPlayerDiscovery.removeCastingPlayerChangeListener(castingPlayerChangeListener);
-    if (err.hasError()) {
-      Log.e(TAG, "onResume() removeCastingPlayerChangeListener() err: " + err);
-    }
-    if (!startDiscovery()) {
-      Log.e(TAG, "onResume() Warning: startDiscovery() call Failed");
-    }
+    // Manual commissioning mode - no automatic discovery needed
   }
 
   @Override
   public void onPause() {
     super.onPause();
-    Log.i(TAG, "DiscoveryExampleFragment onPause() called, calling stopDiscovery()");
-    // Stop discovery when leaving the fragment, for example, while displaying the
-    // ConnectionExampleFragment.
-    stopDiscovery();
+    Log.i(TAG, "DiscoveryExampleFragment onPause() called");
+    // Manual commissioning mode - no discovery to stop
   }
 
   /** Interface for notifying the host. */
@@ -194,78 +183,9 @@ public class DiscoveryExampleFragment extends Fragment {
         CastingPlayer castingPlayer, boolean useCommissionerGeneratedPasscode);
   }
 
-  private boolean startDiscovery() {
-    Log.i(TAG, "startDiscovery() called");
-    matterDiscoveryErrorMessageTextView.setText(
-        getString(R.string.matter_discovery_error_message_initial));
 
-    arrayAdapter.clear();
 
-    // Add the implemented CastingPlayerChangeListener to listen to changes in the discovered
-    // CastingPlayers
-    MatterError err =
-        matterCastingPlayerDiscovery.addCastingPlayerChangeListener(castingPlayerChangeListener);
-    if (err.hasError()) {
-      Log.e(TAG, "startDiscovery() addCastingPlayerChangeListener() called, err Add: " + err);
-      matterDiscoveryErrorMessageTextView.setText(
-          getString(R.string.matter_discovery_error_message_stop_before_starting) + err);
-      return false;
-    }
-    // Start discovery
-    Log.i(TAG, "startDiscovery() calling CastingPlayerDiscovery.startDiscovery()");
-    err = matterCastingPlayerDiscovery.startDiscovery(DISCOVERY_TARGET_DEVICE_TYPE);
-    if (err.hasError()) {
-      Log.e(TAG, "startDiscovery() startDiscovery() called, err Start: " + err);
-      matterDiscoveryErrorMessageTextView.setText(
-          getString(R.string.matter_discovery_error_message_start_error) + err);
-      return false;
-    }
 
-    Log.i(TAG, "startDiscovery() started discovery");
-
-    matterDiscoveryMessageTextView.setText(
-        getString(R.string.matter_discovery_message_discovering_text));
-
-    return true;
-  }
-
-  private void stopDiscovery() {
-    Log.i(TAG, "DiscoveryExampleFragment stopDiscovery() called");
-    matterDiscoveryErrorMessageTextView.setText(
-        getString(R.string.matter_discovery_error_message_initial));
-
-    // Stop discovery
-    MatterError err = matterCastingPlayerDiscovery.stopDiscovery();
-    if (err.hasError()) {
-      Log.e(
-          TAG,
-          "stopDiscovery() MatterCastingPlayerDiscovery.stopDiscovery() called, err Stop: " + err);
-      matterDiscoveryErrorMessageTextView.setText(
-          getString(R.string.matter_discovery_error_message_stop_error) + err);
-    } else {
-      Log.d(TAG, "stopDiscovery() MatterCastingPlayerDiscovery.stopDiscovery() success");
-    }
-
-    matterDiscoveryMessageTextView.setText(
-        getString(R.string.matter_discovery_message_stopped_text));
-    Log.d(
-        TAG,
-        "stopDiscovery() text set to: "
-            + getString(R.string.matter_discovery_message_stopped_text));
-
-    // Remove the CastingPlayerChangeListener
-    Log.i(TAG, "stopDiscovery() removing CastingPlayerChangeListener");
-    err =
-        matterCastingPlayerDiscovery.removeCastingPlayerChangeListener(castingPlayerChangeListener);
-    if (err.hasError()) {
-      Log.e(
-          TAG,
-          "stopDiscovery() matterCastingPlayerDiscovery.removeCastingPlayerChangeListener() called, err Remove: "
-              + err);
-      matterDiscoveryErrorMessageTextView.setText(
-          getString(R.string.matter_discovery_error_message_stop_error) + err);
-    }
-  }
 
   /**
    * Sets up the manual commissioning section with QR code, commissioning info,
