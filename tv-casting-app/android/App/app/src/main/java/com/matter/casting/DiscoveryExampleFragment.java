@@ -403,7 +403,7 @@ public class DiscoveryExampleFragment extends Fragment {
             Log.d(TAG, "Found CastingPlayer: " + player.getDeviceName() + 
                   ", State: " + player.getConnectionState());
             
-            if (player.getConnectionState() == CastingPlayer.ConnectionState.CASTING_PLAYER_CONNECTED) {
+            if (player.getConnectionState() == CastingPlayer.ConnectionState.CONNECTED) {
               commissionedPlayer = player;
               break;
             }
@@ -414,18 +414,18 @@ public class DiscoveryExampleFragment extends Fragment {
             commissioningStatusTextView.setText(
               "✓ Found commissioned device!\n" +
               "Device: " + finalPlayer.getDeviceName() + "\n" +
-              "Node ID: " + Long.toHexString(finalPlayer.getNodeId()) + "\n\n" +
+              "Device ID: " + finalPlayer.getDeviceId() + "\n\n" +
               "Navigating to command interface..."
             );
             
             Log.i(TAG, "Found commissioned CastingPlayer: " + finalPlayer.getDeviceName() + 
-                  ", NodeId: 0x" + Long.toHexString(finalPlayer.getNodeId()));
+                  ", DeviceId: " + finalPlayer.getDeviceId());
             
             // Navigate to ActionSelector after a brief delay
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
               Callback callback = (Callback) getActivity();
               if (callback != null) {
-                callback.handleConnectionComplete(finalPlayer, false);
+                callback.handleConnectionButtonClicked(finalPlayer, false);
               }
             }, 1500);
           } else {
@@ -459,7 +459,7 @@ public class DiscoveryExampleFragment extends Fragment {
         if (castingPlayerList.size() > previousSize[0]) {
           CastingPlayer newPlayer = castingPlayerList.get(castingPlayerList.size() - 1);
           
-          if (newPlayer.getConnectionState() == CastingPlayer.ConnectionState.CASTING_PLAYER_CONNECTED) {
+          if (newPlayer.getConnectionState() == CastingPlayer.ConnectionState.CONNECTED) {
             Log.i(TAG, "Detected newly commissioned CastingPlayer: " + newPlayer.getDeviceName());
             
             TextView commissioningStatusTextView = getView().findViewById(R.id.commissioningStatusTextView);
@@ -473,7 +473,7 @@ public class DiscoveryExampleFragment extends Fragment {
             handler.postDelayed(() -> {
               Callback callback = (Callback) getActivity();
               if (callback != null) {
-                callback.handleConnectionComplete(newPlayer, false);
+                callback.handleConnectionButtonClicked(newPlayer, false);
               }
             }, 1500); // 1.5 second delay to show the message
             

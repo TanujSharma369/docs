@@ -76,7 +76,7 @@ public class ManualCommissioningMonitor {
                         // Take the first connected player
                         CastingPlayer player = connectedPlayers.get(0);
                         
-                        if (player.getConnectionState() == CastingPlayer.ConnectionState.CASTING_PLAYER_CONNECTED) {
+                        if (player.getConnectionState() == CastingPlayer.ConnectionState.CONNECTED) {
                             Log.i(TAG, "Commissioning complete! CastingPlayer: " + player.getDeviceName());
                             
                             // Stop monitoring
