@@ -285,11 +285,8 @@ public class DiscoveryExampleFragment extends Fragment {
         getActivity().runOnUiThread(() -> {
           if (err.hasNoError()) {
             commissioningStatusTextView.setText(
-              "Commissioning window opened!\n" +
-              "App is now discoverable for 3 minutes.\n" +
-              "Your commissioner can discover and commission this app.\n\n" +
-              "Once commissioned, your device can send commands to this app.\n" +
-              "The connection status will update automatically."
+              "Commissioning/pairing window opened!\n" +
+              "App is now discoverable for 3 minutes.\n"
             );
             Log.i(TAG, "Successfully opened commissioning window");
             
