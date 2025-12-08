@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
-    android:padding="16dp"
-    android:scrollbars="vertical">
+    android:scrollbars="vertical"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="32dp">
+        android:padding="16dp"
+        android:paddingBottom="48dp">
 
         <!-- Title -->
         <TextView
