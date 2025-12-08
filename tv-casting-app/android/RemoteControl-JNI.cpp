@@ -41,32 +41,21 @@ JNI_METHOD(jboolean, sendKeyToDevice)(JNIEnv * env, jobject thiz, jint keyCode)
     }
 
     // Find an endpoint that supports KeypadInput cluster (Cluster ID 0x509)
-    const uint16_t kKeypadInputClusterId = 0x509;
-    TargetEndpointInfo * keypadInputEndpoint = nullptr;
-
-    for (size_t i = 0; i < kMaxNumberOfEndpoints; i++)
+    TargetEndpointInfo * endpoints = targetVideoPlayerInfo->GetEndpoints();
+    if (endpoints == nullptr)
     {
-        TargetEndpointInfo * endpoint = targetVideoPlayerInfo->GetEndpoint(i);
-        if (endpoint != nullptr && endpoint->IsInitialized())
+        ChipLogError(AppServer, "No endpoints available");
+        return JNI_FALSE;
+    }
+    
+    TargetEndpointInfo * keypadInputEndpoint = nullptr;
+    for (size_t i = 0; i < kMaxNumberOfEndpoints && endpoints[i].IsInitialized(); i++)
+    {
+        if (endpoints[i].HasCluster(chip::app::Clusters::KeypadInput::Id))
         {
-            ChipLogProgress(AppServer, "Checking endpoint %d for KeypadInput cluster", endpoint->GetEndpointId());
-            
-            // Check if this endpoint has KeypadInput cluster
-            for (size_t j = 0; j < kMaxNumberOfClustersPerEndpoint; j++)
-            {
-                chip::ClusterId clusterId = endpoint->GetCluster(j);
-                if (clusterId == kKeypadInputClusterId)
-                {
-                    keypadInputEndpoint = endpoint;
-                    ChipLogProgress(AppServer, "Found KeypadInput cluster on endpoint %d", endpoint->GetEndpointId());
-                    break;
-                }
-            }
-            
-            if (keypadInputEndpoint != nullptr)
-            {
-                break;
-            }
+            keypadInputEndpoint = &endpoints[i];
+            ChipLogProgress(AppServer, "Found KeypadInput cluster on endpoint %d", keypadInputEndpoint->GetEndpointId());
+            break;
         }
     }
 
