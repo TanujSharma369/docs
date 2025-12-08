@@ -173,6 +173,9 @@ public class DiscoveryExampleFragment extends Fragment {
 
     // Setup manual commissioning section
     setupManualCommissioningSection();
+    
+    // Setup check commissioned device button
+    setupCheckCommissionedDeviceButton();
 
     Button startDiscoveryButton = getView().findViewById(R.id.startDiscoveryButton);
     startDiscoveryButton.setOnClickListener(
@@ -335,9 +338,14 @@ public class DiscoveryExampleFragment extends Fragment {
             commissioningStatusTextView.setText(
               "✓ Commissioning window opened!\n" +
               "App is now discoverable for 3 minutes.\n" +
-              "Your commissioner can discover and commission this app."
+              "Your commissioner can discover and commission this app.\n\n" +
+              "Once commissioned, your STB can send commands to this app.\n" +
+              "The app will detect the connection automatically."
             );
             Log.i(TAG, "Successfully opened commissioning window");
+            
+            // Start monitoring for commissioned connection
+            startMonitoringForCommissionedPlayer();
           } else {
             commissioningStatusTextView.setText(
               "✗ Failed to open commissioning window: " + err.getErrorMessage()
@@ -356,9 +364,132 @@ public class DiscoveryExampleFragment extends Fragment {
         if (isOpen) {
           commissioningStatusTextView.setText("ℹ Commissioning window is already open");
           openCommissioningWindowButton.setEnabled(false);
+          // Also start monitoring since window is open
+          startMonitoringForCommissionedPlayer();
         }
       });
     }).start();
+  }
+
+  /**
+   * Sets up the "Check for Commissioned Device" button to detect if this app
+   * was commissioned externally (e.g., by an STB) and navigate to command interface
+   */
+  private void setupCheckCommissionedDeviceButton() {
+    Button checkCommissionedDeviceButton = getView().findViewById(R.id.checkCommissionedDeviceButton);
+    TextView commissioningStatusTextView = getView().findViewById(R.id.commissioningStatusTextView);
+    
+    checkCommissionedDeviceButton.setOnClickListener(v -> {
+      Log.i(TAG, "Checking for commissioned CastingPlayers");
+      commissioningStatusTextView.setText("Checking for commissioned devices...");
+      
+      new Thread(() -> {
+        // Get all CastingPlayers (both discovered and commissioned)
+        List<CastingPlayer> allPlayers = matterCastingPlayerDiscovery.getCastingPlayers();
+        
+        getActivity().runOnUiThread(() -> {
+          if (allPlayers == null || allPlayers.isEmpty()) {
+            commissioningStatusTextView.setText(
+              "✗ No commissioned devices found.\n\n" +
+              "Make sure your STB has commissioned this app first."
+            );
+            Log.i(TAG, "No CastingPlayers found");
+            return;
+          }
+          
+          // Find the first CONNECTED player
+          CastingPlayer commissionedPlayer = null;
+          for (CastingPlayer player : allPlayers) {
+            Log.d(TAG, "Found CastingPlayer: " + player.getDeviceName() + 
+                  ", State: " + player.getConnectionState());
+            
+            if (player.getConnectionState() == CastingPlayer.ConnectionState.CASTING_PLAYER_CONNECTED) {
+              commissionedPlayer = player;
+              break;
+            }
+          }
+          
+          if (commissionedPlayer != null) {
+            final CastingPlayer finalPlayer = commissionedPlayer;
+            commissioningStatusTextView.setText(
+              "✓ Found commissioned device!\n" +
+              "Device: " + finalPlayer.getDeviceName() + "\n" +
+              "Node ID: " + Long.toHexString(finalPlayer.getNodeId()) + "\n\n" +
+              "Navigating to command interface..."
+            );
+            
+            Log.i(TAG, "Found commissioned CastingPlayer: " + finalPlayer.getDeviceName() + 
+                  ", NodeId: 0x" + Long.toHexString(finalPlayer.getNodeId()));
+            
+            // Navigate to ActionSelector after a brief delay
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+              Callback callback = (Callback) getActivity();
+              if (callback != null) {
+                callback.handleConnectionComplete(finalPlayer, false);
+              }
+            }, 1500);
+          } else {
+            commissioningStatusTextView.setText(
+              "✗ No CONNECTED devices found.\n\n" +
+              "Found " + allPlayers.size() + " CastingPlayer(s) but none are connected.\n" +
+              "Please commission this app from your STB first."
+            );
+            Log.i(TAG, "Found " + allPlayers.size() + " CastingPlayer(s) but none are CONNECTED");
+          }
+        });
+      }).start();
+    });
+  }
+
+  /**
+   * Monitors for externally commissioned CastingPlayers and automatically navigates
+   * to the ActionSelector when one is found
+   */
+  private void startMonitoringForCommissionedPlayer() {
+    Log.i(TAG, "Starting to monitor for commissioned CastingPlayer");
+    
+    // Monitor for newly commissioned players in the castingPlayerList
+    final int[] previousSize = {castingPlayerList.size()};
+    
+    android.os.Handler handler = new android.os.Handler(android.os.Looper.getMainLooper());
+    Runnable checkForNewPlayer = new Runnable() {
+      @Override
+      public void run() {
+        // Check if a new player was added and is connected
+        if (castingPlayerList.size() > previousSize[0]) {
+          CastingPlayer newPlayer = castingPlayerList.get(castingPlayerList.size() - 1);
+          
+          if (newPlayer.getConnectionState() == CastingPlayer.ConnectionState.CASTING_PLAYER_CONNECTED) {
+            Log.i(TAG, "Detected newly commissioned CastingPlayer: " + newPlayer.getDeviceName());
+            
+            TextView commissioningStatusTextView = getView().findViewById(R.id.commissioningStatusTextView);
+            commissioningStatusTextView.setText(
+              "✓ Successfully commissioned!\n" +
+              "Connected to: " + newPlayer.getDeviceName() + "\n" +
+              "Navigating to command interface..."
+            );
+            
+            // Navigate to ActionSelector after a brief delay
+            handler.postDelayed(() -> {
+              Callback callback = (Callback) getActivity();
+              if (callback != null) {
+                callback.handleConnectionComplete(newPlayer, false);
+              }
+            }, 1500); // 1.5 second delay to show the message
+            
+            return; // Stop monitoring
+          }
+        }
+        
+        previousSize[0] = castingPlayerList.size();
+        
+        // Check again in 2 seconds
+        handler.postDelayed(this, 2000);
+      }
+    };
+    
+    // Start checking after 2 seconds
+    handler.postDelayed(checkForNewPlayer, 2000);
   }
 }
 

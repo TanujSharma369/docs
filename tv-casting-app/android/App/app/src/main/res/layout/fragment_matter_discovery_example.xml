@@ -50,6 +50,14 @@
             android:text="Open Commissioning Window"
             android:layout_marginBottom="4dp" />
 
+        <Button
+            android:id="@+id/checkCommissionedDeviceButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check for Commissioned Device"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="#4CAF50" />
+
         <TextView
             android:id="@+id/commissioningStatusTextView"
             android:layout_width="match_parent"
