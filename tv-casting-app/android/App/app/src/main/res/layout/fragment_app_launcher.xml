@@ -37,69 +37,21 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Launch or stop applications on your STB using the ApplicationLauncher cluster."
+            android:text="Launch or stop applications on your STB"
             android:textSize="14sp"
             android:padding="12dp"
             android:background="#E3F2FD"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Input Section -->
-        <LinearLayout
+        <!-- YouTube Section -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#FFFFFF"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp">
+            android:text="YouTube"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"/>
 
-            <!-- Catalog Vendor ID -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Catalog Vendor ID"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:paddingBottom="4dp"/>
-
-            <EditText
-                android:id="@+id/catalogVendorIdInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter catalog vendor ID (e.g., 0)"
-                android:inputType="number"
-                android:padding="12dp"
-                android:background="@android:drawable/edit_text"
-                android:layout_marginBottom="16dp"/>
-
-            <!-- Application ID -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Application ID"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:paddingBottom="4dp"/>
-
-            <EditText
-                android:id="@+id/applicationIdInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter application ID (e.g., YouTube)"
-                android:inputType="text"
-                android:padding="12dp"
-                android:background="@android:drawable/edit_text"
-                android:layout_marginBottom="8dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Common apps: YouTube, Netflix, Prime Video, Disney+"
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:paddingBottom="8dp"/>
-        </LinearLayout>
-
-        <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,22 +59,60 @@
             android:layout_marginBottom="16dp">
 
             <Button
-                android:id="@+id/launchAppButton"
+                android:id="@+id/launchYouTubeButton"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
-                android:text="LAUNCH APP"
+                android:text="LAUNCH YOUTUBE"
                 android:textStyle="bold"
                 android:background="@android:color/holo_green_dark"
                 android:textColor="#FFFFFF"
                 android:layout_marginEnd="8dp"/>
 
             <Button
-                android:id="@+id/stopAppButton"
+                android:id="@+id/stopYouTubeButton"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
-                android:text="STOP APP"
+                android:text="STOP YOUTUBE"
+                android:textStyle="bold"
+                android:background="@android:color/holo_red_dark"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <!-- Netflix Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Netflix"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/launchNetflixButton"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="LAUNCH NETFLIX"
+                android:textStyle="bold"
+                android:background="@android:color/holo_green_dark"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/stopNetflixButton"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="STOP NETFLIX"
                 android:textStyle="bold"
                 android:background="@android:color/holo_red_dark"
                 android:textColor="#FFFFFF"

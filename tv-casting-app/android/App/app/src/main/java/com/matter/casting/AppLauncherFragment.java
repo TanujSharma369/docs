@@ -22,10 +22,10 @@ public class AppLauncherFragment extends Fragment {
   private static final String TAG = AppLauncherFragment.class.getSimpleName();
   
   private TextView deviceStatusText;
-  private EditText catalogVendorIdInput;
-  private EditText applicationIdInput;
-  private Button launchAppButton;
-  private Button stopAppButton;
+  private Button launchYouTubeButton;
+  private Button stopYouTubeButton;
+  private Button launchNetflixButton;
+  private Button stopNetflixButton;
   private TextView statusText;
   
   static {
@@ -46,10 +46,10 @@ public class AppLauncherFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     
     deviceStatusText = view.findViewById(R.id.appLauncherDeviceStatusText);
-    catalogVendorIdInput = view.findViewById(R.id.catalogVendorIdInput);
-    applicationIdInput = view.findViewById(R.id.applicationIdInput);
-    launchAppButton = view.findViewById(R.id.launchAppButton);
-    stopAppButton = view.findViewById(R.id.stopAppButton);
+    launchYouTubeButton = view.findViewById(R.id.launchYouTubeButton);
+    stopYouTubeButton = view.findViewById(R.id.stopYouTubeButton);
+    launchNetflixButton = view.findViewById(R.id.launchNetflixButton);
+    stopNetflixButton = view.findViewById(R.id.stopNetflixButton);
     statusText = view.findViewById(R.id.appLauncherStatusText);
     
     checkDeviceConnection();
@@ -64,54 +64,32 @@ public class AppLauncherFragment extends Fragment {
     } else {
       deviceStatusText.setText("No commissioned device found. Please commission a device first.");
       deviceStatusText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-      launchAppButton.setEnabled(false);
-      stopAppButton.setEnabled(false);
+      launchYouTubeButton.setEnabled(false);
+      stopYouTubeButton.setEnabled(false);
+      launchNetflixButton.setEnabled(false);
+      stopNetflixButton.setEnabled(false);
     }
   }
   
   private void setupButtons() {
-    // Set default values
-    catalogVendorIdInput.setText("0");
-    applicationIdInput.setText("YouTube");
-    
-    launchAppButton.setOnClickListener(v -> {
-      String catalogVendorIdStr = catalogVendorIdInput.getText().toString().trim();
-      String applicationId = applicationIdInput.getText().toString().trim();
-      
-      if (applicationId.isEmpty()) {
-        Toast.makeText(getContext(), "Please enter Application ID", Toast.LENGTH_SHORT).show();
-        return;
-      }
-      
-      int catalogVendorId = 0;
-      try {
-        catalogVendorId = Integer.parseInt(catalogVendorIdStr);
-      } catch (NumberFormatException e) {
-        Toast.makeText(getContext(), "Invalid Catalog Vendor ID", Toast.LENGTH_SHORT).show();
-        return;
-      }
-      
-      launchApplication(catalogVendorId, applicationId);
+    // YouTube Launch Button
+    launchYouTubeButton.setOnClickListener(v -> {
+      launchApplication(0, "YouTube");
     });
     
-    stopAppButton.setOnClickListener(v -> {
-      String catalogVendorIdStr = catalogVendorIdInput.getText().toString().trim();
-      String applicationId = applicationIdInput.getText().toString().trim();
-      
-      if (applicationId.isEmpty()) {
-        Toast.makeText(getContext(), "Please enter Application ID", Toast.LENGTH_SHORT).show();
-        return;
-      }
-      
-      int catalogVendorId = 0;
-      try {
-        catalogVendorId = Integer.parseInt(catalogVendorIdStr);
-      } catch (NumberFormatException e) {
-        Toast.makeText(getContext(), "Invalid Catalog Vendor ID", Toast.LENGTH_SHORT).show();
-        return;
-      }
-      
-      stopApplication(catalogVendorId, applicationId);
+    // YouTube Stop Button
+    stopYouTubeButton.setOnClickListener(v -> {
+      stopApplication(0, "YouTube");
+    });
+    
+    // Netflix Launch Button
+    launchNetflixButton.setOnClickListener(v -> {
+      launchApplication(0, "Netflix");
+    });
+    
+    // Netflix Stop Button
+    stopNetflixButton.setOnClickListener(v -> {
+      stopApplication(0, "Netflix");
     });
   }
   
