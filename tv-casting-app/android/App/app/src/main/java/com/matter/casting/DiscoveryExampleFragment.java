@@ -412,8 +412,19 @@ public class DiscoveryExampleFragment extends Fragment {
           // Show dialog with command options
           new android.app.AlertDialog.Builder(requireContext())
             .setTitle("Device Ready")
-            .setMessage("The STB has commissioned this app successfully.\n\nThe connection is established and ready.\n\nWould you like to send a test command?")
-            .setPositiveButton("Send Test LaunchURL", (dialog, which) -> {
+            .setMessage("The STB has commissioned this app successfully.\n\nThe connection is established and ready.\n\nWhat would you like to do?")
+            .setPositiveButton("Virtual Remote", (dialog, which) -> {
+              Log.i(TAG, "Opening Virtual Remote Controller");
+              // Navigate to RemoteControlFragment
+              if (getActivity() != null) {
+                getActivity().getSupportFragmentManager()
+                  .beginTransaction()
+                  .replace(R.id.main_fragment, new RemoteControlFragment())
+                  .addToBackStack(null)
+                  .commit();
+              }
+            })
+            .setNeutralButton("Test LaunchURL", (dialog, which) -> {
               Log.i(TAG, "Sending test LaunchURL command to commissioned STB");
               commissioningStatusTextView.setText("Sending LaunchURL command...");
               
