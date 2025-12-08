@@ -60,7 +60,7 @@ public class PreferencesConfigurationManager implements ConfigurationManager {
          * src/include/platform/CHIPDeviceConfig.h for debug
          */
       case kConfigNamespace_ChipFactory + ":" + kConfigKey_ProductId:
-        return 0x5678;
+        return 0x8001;
 
         /**
          * The default hardware version number assigned to the device or product by the device

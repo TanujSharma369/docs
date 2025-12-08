@@ -53,7 +53,7 @@ public class InitializationExample {
     // tv-app:
     // connectedhomeip/examples/tv-app/tv-common/src/AppTv.cpp
     private static final long DUMMY_SETUP_PASSCODE = 20202021;
-    private static final int DUMMY_DISCRIMINATOR = 0;
+    private static final int DUMMY_DISCRIMINATOR = 3840;
 
     CommissionableData commissionableData =
         new CommissionableData(DUMMY_SETUP_PASSCODE, DUMMY_DISCRIMINATOR);
