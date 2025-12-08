@@ -293,7 +293,7 @@ public class DiscoveryExampleFragment extends Fragment {
             // Show toast notification
             android.widget.Toast.makeText(
               getContext(),
-              "✓ Commissioning Window Opened\nWaiting for device to connect...",
+              " Commissioning Window Opened\nWaiting for device to connect...",
               android.widget.Toast.LENGTH_SHORT
             ).show();
             
@@ -331,6 +331,7 @@ public class DiscoveryExampleFragment extends Fragment {
   private void setupNavigationButtons() {
     Button virtualRemoteButton = getView().findViewById(R.id.virtualRemoteButton);
     Button appLauncherButton = getView().findViewById(R.id.appLauncherButton);
+    Button voiceControlButton = getView().findViewById(R.id.voiceControlButton);
     TextView commissioningStatusTextView = getView().findViewById(R.id.commissioningStatusTextView);
     
     // Virtual Remote button - navigate to RemoteControlFragment
@@ -376,6 +377,30 @@ public class DiscoveryExampleFragment extends Fragment {
         getActivity().getSupportFragmentManager()
           .beginTransaction()
           .replace(R.id.main_fragment_container, new AppLauncherFragment())
+          .addToBackStack(null)
+          .commit();
+      }
+    });
+    
+    // Voice Control button - navigate to VoiceControlFragment
+    voiceControlButton.setOnClickListener(v -> {
+      Log.i(TAG, "Voice Control button clicked");
+      
+      // Check if device is commissioned
+      boolean hasPlayer = ManualCommissioningHelper.hasCommissionedVideoPlayer();
+      if (!hasPlayer) {
+        commissioningStatusTextView.setText(
+          "✗ No commissioned device found.\n\n" +
+          "Please open commissioning window and commission from your device first."
+        );
+        return;
+      }
+      
+      // Navigate to VoiceControlFragment
+      if (getActivity() != null) {
+        getActivity().getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.main_fragment_container, new VoiceControlFragment())
           .addToBackStack(null)
           .commit();
       }

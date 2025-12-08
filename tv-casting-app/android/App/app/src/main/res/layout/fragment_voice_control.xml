@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:scrollbars="vertical"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:paddingBottom="48dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voice Control"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="8dp"/>
+
+        <!-- Device Status -->
+        <TextView
+            android:id="@+id/voiceDeviceStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Checking device connection..."
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:background="#FFFFFF"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"/>
+
+        <!-- Instructions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Control your device using voice commands"
+            android:textSize="14sp"
+            android:padding="12dp"
+            android:background="#E3F2FD"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Control Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/startListeningButton"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="🎤 START LISTENING"
+                android:textStyle="bold"
+                android:background="@android:color/holo_green_dark"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/stopListeningButton"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="⏹️ STOP"
+                android:textStyle="bold"
+                android:background="@android:color/holo_red_dark"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <!-- Listening Status -->
+        <TextView
+            android:id="@+id/listeningStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⏸️ Ready to listen"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:background="#FFFFFF"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Last Command -->
+        <TextView
+            android:id="@+id/lastCommandText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Last command: None"
+            android:textSize="14sp"
+            android:padding="12dp"
+            android:background="#FFF9C4"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Status Display -->
+        <TextView
+            android:id="@+id/voiceStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="14sp"
+            android:padding="12dp"
+            android:background="#FFFFFF"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"/>
+
+        <!-- Command Examples -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voice Command Examples"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Navigation:\n• &quot;Press left&quot;\n• &quot;Press right&quot;\n• &quot;Press up&quot;\n• &quot;Press down&quot;\n• &quot;Press select&quot;\n\nApplication Commands:\n• &quot;Launch YouTube&quot;\n• &quot;Open Netflix&quot;\n• &quot;Stop YouTube&quot;\n• &quot;Close Netflix&quot;\n\nVolume:\n• &quot;Volume up&quot;\n• &quot;Volume down&quot;\n• &quot;Mute&quot;\n\nMedia:\n• &quot;Play&quot;\n• &quot;Pause&quot;\n• &quot;Stop&quot;\n• &quot;Rewind&quot;\n• &quot;Fast forward&quot;\n\nOther:\n• &quot;Home&quot; or &quot;Menu&quot;\n• &quot;Back&quot;\n• &quot;Channel up/down&quot;\n• &quot;Number 1&quot; through &quot;Number 9&quot;\n• &quot;Power&quot;"
+            android:textSize="14sp"
+            android:padding="12dp"
+            android:background="#F0F0F0"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Permission Note -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ℹ️ Microphone permission required for voice commands"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:padding="8dp"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+</ScrollView>

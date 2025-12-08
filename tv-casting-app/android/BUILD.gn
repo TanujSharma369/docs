@@ -43,6 +43,7 @@ shared_library("jni") {
     "App/app/src/main/jni/cpp/support/MatterCallback-JNI.h",
     "RemoteControl-JNI.cpp",
     "AppLauncher-JNI.cpp",
+    "VoiceControl-JNI.cpp",
     "App/app/src/main/jni/cpp/support/RotatingDeviceIdUniqueIdProvider-JNI.cpp",
     "App/app/src/main/jni/cpp/support/RotatingDeviceIdUniqueIdProvider-JNI.h",
   ]
