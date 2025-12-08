@@ -380,85 +380,74 @@ public class DiscoveryExampleFragment extends Fragment {
     TextView commissioningStatusTextView = getView().findViewById(R.id.commissioningStatusTextView);
     
     checkCommissionedDeviceButton.setOnClickListener(v -> {
-      Log.i(TAG, "Checking for commissioned devices in fabric table");
-      commissioningStatusTextView.setText("Checking fabric table for commissioned devices...");
+      Log.i(TAG, "Checking for commissioned video player");
+      commissioningStatusTextView.setText("Checking for commissioned device...");
       
       new Thread(() -> {
-        // Check fabric table directly for commissioned devices
-        boolean hasCommissioned = CommissionedDeviceHelper.hasCommissionedDevice();
-        String[] deviceInfo = CommissionedDeviceHelper.getCommissionedDeviceInfo();
+        // Check if we have commissioned video player from OnConnectionSuccess callback
+        boolean hasPlayer = ManualCommissioningHelper.hasCommissionedVideoPlayer();
+        String playerInfo = ManualCommissioningHelper.getCommissionedVideoPlayerInfo();
         
         getActivity().runOnUiThread(() -> {
-          if (!hasCommissioned || deviceInfo == null || deviceInfo.length == 0) {
+          if (!hasPlayer || playerInfo == null) {
             commissioningStatusTextView.setText(
-              "✗ No commissioned devices found in fabric table.\n\n" +
-              "Make sure your STB has successfully commissioned this app.\n" +
-              "Check STB logs for 'Commissioned successfully' message."
+              "✗ No commissioned device found.\n\n" +
+              "Steps:\n" +
+              "1. Click 'Open Commissioning Window' above\n" +
+              "2. Commission this app from your STB\n" +
+              "3. After commissioning succeeds, click this button again"
             );
-            Log.i(TAG, "No commissioned devices found in fabric table");
+            Log.i(TAG, "No commissioned video player available");
             return;
           }
           
-          // Log all commissioned devices
-          Log.i(TAG, "Found " + deviceInfo.length + " commissioned device(s) in fabric table:");
-          for (String info : deviceInfo) {
-            Log.i(TAG, "  " + info);
-          }
+          Log.i(TAG, "Found commissioned video player: " + playerInfo);
           
-          // Parse first device info
-          String firstDevice = deviceInfo[0];
           commissioningStatusTextView.setText(
-            "✓ Found commissioned device in fabric table!\n" +
-            deviceInfo.length + " device(s) commissioned\n" +
-            "Info: " + firstDevice + "\n\n" +
-            "Checking for connected CastingPlayer..."
+            "✓ Device commissioned successfully!\n" +
+            playerInfo + "\n\n" +
+            "You can now send commands to the STB."
           );
           
-          // Now try to find matching CastingPlayer
-          List<CastingPlayer> allPlayers = matterCastingPlayerDiscovery.getCastingPlayers();
-          CastingPlayer commissionedPlayer = null;
-          
-          if (allPlayers != null && !allPlayers.isEmpty()) {
-            for (CastingPlayer player : allPlayers) {
-              Log.d(TAG, "Checking CastingPlayer: " + player.getDeviceName() + 
-                    ", State: " + player.getConnectionState());
+          // Show dialog with command options
+          new AlertDialog.Builder(requireContext())
+            .setTitle("Device Ready")
+            .setMessage("The STB has commissioned this app successfully.\n\nThe connection is established and ready.\n\nWould you like to send a test command?")
+            .setPositiveButton("Send Test LaunchURL", (dialog, which) -> {
+              Log.i(TAG, "Sending test LaunchURL command to commissioned STB");
+              commissioningStatusTextView.setText("Sending LaunchURL command...");
               
-              if (player.getConnectionState() == CastingPlayer.ConnectionState.CONNECTED) {
-                commissionedPlayer = player;
-                break;
-              }
-            }
-          }
-          
-          if (commissionedPlayer != null) {
-            final CastingPlayer finalPlayer = commissionedPlayer;
-            commissioningStatusTextView.setText(
-              "✓ Found commissioned & connected device!\n" +
-              "Device: " + finalPlayer.getDeviceName() + "\n" +
-              "Device ID: " + finalPlayer.getDeviceId() + "\n\n" +
-              "Navigating to command interface..."
-            );
-            
-            Log.i(TAG, "Found connected CastingPlayer: " + finalPlayer.getDeviceName());
-            
-            // Navigate to ActionSelector after a brief delay
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-              Callback callback = (Callback) getActivity();
-              if (callback != null) {
-                callback.handleConnectionButtonClicked(finalPlayer, false);
-              }
-            }, 1500);
-          } else {
-            commissioningStatusTextView.setText(
-              "⚠ Device is commissioned but not yet in CastingPlayer list.\n\n" +
-              "The STB commissioned this app successfully.\n" +
-              "To send commands to STB:\n" +
-              "1. Click 'Start Discovery' above\n" +
-              "2. Wait for STB to appear in the list\n" +
-              "3. Click on the STB to connect and send commands"
-            );
-            Log.i(TAG, "Commissioned device found but no matching connected CastingPlayer. User needs to discover STB.");
-          }
+              new Thread(() -> {
+                MatterError err = ManualCommissioningHelper.sendLaunchURLCommand(
+                  "https://www.example.com",
+                  "Test URL from Android TV Casting App"
+                );
+                
+                getActivity().runOnUiThread(() -> {
+                  if (err.getErrorCode() == 0) {
+                    commissioningStatusTextView.setText(
+                      "✓ LaunchURL command sent successfully!\n\n" +
+                      "Check your STB to see if it opened the URL.\n\n" +
+                      playerInfo
+                    );
+                    Log.i(TAG, "LaunchURL command sent successfully");
+                  } else {
+                    commissioningStatusTextView.setText(
+                      "✗ Failed to send command: " + err.getErrorMessage()
+                    );
+                    Log.e(TAG, "Failed to send LaunchURL: " + err.getErrorMessage());
+                  }
+                });
+              }).start();
+            })
+            .setNegativeButton("Not Now", (dialog, which) -> {
+              commissioningStatusTextView.setText(
+                "✓ Device commissioned and ready!\n\n" +
+                playerInfo + "\n\n" +
+                "Click the button above to send commands anytime."
+              );
+            })
+            .show();
         });
       }).start();
     });

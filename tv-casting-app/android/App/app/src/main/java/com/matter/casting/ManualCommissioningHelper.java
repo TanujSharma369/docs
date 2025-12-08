@@ -76,4 +76,24 @@ public class ManualCommissioningHelper {
      * This is useful for debugging and manual commissioning scenarios.
      */
     public static native void logOnboardingPayload();
+    
+    /**
+     * Check if a video player was commissioned (via OnConnectionSuccess callback)
+     * @return true if a commissioned video player is available
+     */
+    public static native boolean hasCommissionedVideoPlayer();
+    
+    /**
+     * Get information about the commissioned video player
+     * @return String with format "NodeId:0xXXXX,FabricIndex:X,DeviceName:XXX,..." or null if none
+     */
+    public static native String getCommissionedVideoPlayerInfo();
+    
+    /**
+     * Send a ContentLauncher LaunchURL command to the commissioned video player
+     * @param contentUrl URL to launch
+     * @param displayString Display string for the content
+     * @return MatterError.NO_ERROR if successful
+     */
+    public static native MatterError sendLaunchURLCommand(String contentUrl, String displayString);
 }

@@ -33,6 +33,8 @@ using namespace chip;
 
 namespace {
 
+TargetVideoPlayerInfo * gCommissionedVideoPlayer = nullptr;
+
 // Callback when commissioning completes
 void OnCommissioningComplete(CHIP_ERROR err)
 {
@@ -47,6 +49,11 @@ void OnConnectionSuccess(TargetVideoPlayerInfo * videoPlayer)
                     ", fabricIndex: %d, deviceName: %s, vendorId: %d, productId: %d, deviceType: %d)",
                     ChipLogValueX64(videoPlayer->GetNodeId()), videoPlayer->GetFabricIndex(), videoPlayer->GetDeviceName(),
                     videoPlayer->GetVendorId(), videoPlayer->GetProductId(), videoPlayer->GetDeviceType());
+    
+    // Store the commissioned video player so we can use it to send commands
+    gCommissionedVideoPlayer = videoPlayer;
+    
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::OnConnectionSuccess - STB commissioned successfully! Can now send commands.");
 }
 
 // Callback when connection fails
@@ -158,4 +165,103 @@ JNI_METHOD(void, logOnboardingPayload)(JNIEnv * env, jclass)
     
     // This will log the QR code and manual pairing code to logcat
     chip::DeviceLayer::ConfigurationMgr().LogDeviceConfig();
+}
+
+JNI_METHOD(jboolean, hasCommissionedVideoPlayer)(JNIEnv * env, jclass)
+{
+    chip::DeviceLayer::StackLock lock;
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::hasCommissionedVideoPlayer() called");
+    
+    bool hasPlayer = (gCommissionedVideoPlayer != nullptr);
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::hasCommissionedVideoPlayer() returns: %s", hasPlayer ? "true" : "false");
+    
+    return hasPlayer ? JNI_TRUE : JNI_FALSE;
+}
+
+JNI_METHOD(jobject, getCommissionedVideoPlayerInfo)(JNIEnv * env, jclass)
+{
+    chip::DeviceLayer::StackLock lock;
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::getCommissionedVideoPlayerInfo() called");
+    
+    if (gCommissionedVideoPlayer == nullptr)
+    {
+        ChipLogError(AppServer, "ManualCommissioningHelper::getCommissionedVideoPlayerInfo() No commissioned video player");
+        return nullptr;
+    }
+    
+    char infoStr[512];
+    snprintf(infoStr, sizeof(infoStr), 
+            "NodeId:0x%llx,FabricIndex:%d,DeviceName:%s,VendorId:%d,ProductId:%d,DeviceType:%d",
+            static_cast<unsigned long long>(gCommissionedVideoPlayer->GetNodeId()),
+            gCommissionedVideoPlayer->GetFabricIndex(),
+            gCommissionedVideoPlayer->GetDeviceName(),
+            gCommissionedVideoPlayer->GetVendorId(),
+            gCommissionedVideoPlayer->GetProductId(),
+            gCommissionedVideoPlayer->GetDeviceType());
+    
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::getCommissionedVideoPlayerInfo() %s", infoStr);
+    
+    return env->NewStringUTF(infoStr);
+}
+
+JNI_METHOD(jobject, sendLaunchURLCommand)(JNIEnv * env, jclass, jstring contentUrl, jstring displayString)
+{
+    chip::DeviceLayer::StackLock lock;
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::sendLaunchURLCommand() called");
+    
+    if (gCommissionedVideoPlayer == nullptr)
+    {
+        ChipLogError(AppServer, "ManualCommissioningHelper::sendLaunchURLCommand() No commissioned video player");
+        return matter::casting::support::convertMatterErrorFromCppToJava(CHIP_ERROR_INCORRECT_STATE);
+    }
+    
+    // Get the first endpoint that supports ContentLauncher
+    TargetEndpointInfo * endpoints = gCommissionedVideoPlayer->GetEndpoints();
+    if (endpoints == nullptr)
+    {
+        ChipLogError(AppServer, "ManualCommissioningHelper::sendLaunchURLCommand() No endpoints available");
+        return matter::casting::support::convertMatterErrorFromCppToJava(CHIP_ERROR_NOT_FOUND);
+    }
+    
+    TargetEndpointInfo * targetEndpoint = nullptr;
+    for (size_t i = 0; i < kMaxNumberOfEndpoints && endpoints[i].IsInitialized(); i++)
+    {
+        if (endpoints[i].HasCluster(chip::app::Clusters::ContentLauncher::Id))
+        {
+            targetEndpoint = &endpoints[i];
+            break;
+        }
+    }
+    
+    if (targetEndpoint == nullptr)
+    {
+        ChipLogError(AppServer, "ManualCommissioningHelper::sendLaunchURLCommand() No endpoint with ContentLauncher cluster found");
+        return matter::casting::support::convertMatterErrorFromCppToJava(CHIP_ERROR_NOT_FOUND);
+    }
+    
+    const char * nativeContentUrl = env->GetStringUTFChars(contentUrl, 0);
+    const char * nativeDisplayString = env->GetStringUTFChars(displayString, 0);
+    
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::sendLaunchURLCommand() Sending LaunchURL to endpoint %d: %s",
+                    targetEndpoint->GetEndpointId(), nativeContentUrl);
+    
+    CHIP_ERROR err = CastingServer::GetInstance()->ContentLauncherLaunchURL(
+        targetEndpoint, nativeContentUrl, nativeDisplayString,
+        [](CHIP_ERROR err) {
+            ChipLogProgress(AppServer, "ManualCommissioningHelper LaunchURL callback: %" CHIP_ERROR_FORMAT, err.Format());
+        });
+    
+    env->ReleaseStringUTFChars(contentUrl, nativeContentUrl);
+    env->ReleaseStringUTFChars(displayString, nativeDisplayString);
+    
+    if (err == CHIP_NO_ERROR)
+    {
+        ChipLogProgress(AppServer, "ManualCommissioningHelper::sendLaunchURLCommand() Command sent successfully");
+    }
+    else
+    {
+        ChipLogError(AppServer, "ManualCommissioningHelper::sendLaunchURLCommand() Failed: %" CHIP_ERROR_FORMAT, err.Format());
+    }
+    
+    return matter::casting::support::convertMatterErrorFromCppToJava(err);
 }
