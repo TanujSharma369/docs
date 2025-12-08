@@ -13,7 +13,6 @@
 #include <platform/CHIPDeviceLayer.h>
 #include <CastingServer.h>
 #include <TargetVideoPlayerInfo.h>
-#include <ApplicationLauncher.h>
 
 using namespace chip;
 
@@ -77,7 +76,7 @@ JNI_METHOD(jboolean, launchApp)(JNIEnv * env, jobject thiz, jint catalogVendorId
     application.applicationID = chip::CharSpan(nativeApplicationId, strlen(nativeApplicationId));
 
     // Send the ApplicationLauncher LaunchApp command
-    CHIP_ERROR err = castingServer->ApplicationLauncherLaunchApp(
+    CHIP_ERROR err = castingServer->ApplicationLauncher_LaunchApp(
         appLauncherEndpoint,
         application,
         chip::NullOptional, // data (optional)
@@ -160,7 +159,7 @@ JNI_METHOD(jboolean, stopApp)(JNIEnv * env, jobject thiz, jint catalogVendorId, 
     application.applicationID = chip::CharSpan(nativeApplicationId, strlen(nativeApplicationId));
 
     // Send the ApplicationLauncher StopApp command
-    CHIP_ERROR err = castingServer->ApplicationLauncherStopApp(
+    CHIP_ERROR err = castingServer->ApplicationLauncher_StopApp(
         appLauncherEndpoint,
         application,
         [](CHIP_ERROR err) {
