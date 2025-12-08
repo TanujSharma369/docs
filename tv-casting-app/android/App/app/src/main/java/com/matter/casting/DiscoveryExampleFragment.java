@@ -407,9 +407,7 @@ class CastingPlayerArrayAdapter extends ArrayAdapter<CastingPlayer> {
                 "OnLongClickListener.onLongClick() called for CastingPlayer with deviceId "
                     + castingPlayer.getDeviceId()
                     + ". This CastingPlayer does not support Commissioner-Generated passcode commissioning.");
-
-            DiscoveryExampleFragment.matterDiscoveryErrorMessageTextView.setText(
-                "The selected Casting Player does not support Commissioner-Generated passcode commissioning");
+            // Manual commissioning mode - no error display needed
             return true;
           }
           Log.d(
