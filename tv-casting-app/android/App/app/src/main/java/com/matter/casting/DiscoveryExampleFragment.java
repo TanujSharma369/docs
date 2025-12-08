@@ -380,46 +380,66 @@ public class DiscoveryExampleFragment extends Fragment {
     TextView commissioningStatusTextView = getView().findViewById(R.id.commissioningStatusTextView);
     
     checkCommissionedDeviceButton.setOnClickListener(v -> {
-      Log.i(TAG, "Checking for commissioned CastingPlayers");
-      commissioningStatusTextView.setText("Checking for commissioned devices...");
+      Log.i(TAG, "Checking for commissioned devices in fabric table");
+      commissioningStatusTextView.setText("Checking fabric table for commissioned devices...");
       
       new Thread(() -> {
-        // Get all CastingPlayers (both discovered and commissioned)
-        List<CastingPlayer> allPlayers = matterCastingPlayerDiscovery.getCastingPlayers();
+        // Check fabric table directly for commissioned devices
+        boolean hasCommissioned = CommissionedDeviceHelper.hasCommissionedDevice();
+        String[] deviceInfo = CommissionedDeviceHelper.getCommissionedDeviceInfo();
         
         getActivity().runOnUiThread(() -> {
-          if (allPlayers == null || allPlayers.isEmpty()) {
+          if (!hasCommissioned || deviceInfo == null || deviceInfo.length == 0) {
             commissioningStatusTextView.setText(
-              "✗ No commissioned devices found.\n\n" +
-              "Make sure your STB has commissioned this app first."
+              "✗ No commissioned devices found in fabric table.\n\n" +
+              "Make sure your STB has successfully commissioned this app.\n" +
+              "Check STB logs for 'Commissioned successfully' message."
             );
-            Log.i(TAG, "No CastingPlayers found");
+            Log.i(TAG, "No commissioned devices found in fabric table");
             return;
           }
           
-          // Find the first CONNECTED player
+          // Log all commissioned devices
+          Log.i(TAG, "Found " + deviceInfo.length + " commissioned device(s) in fabric table:");
+          for (String info : deviceInfo) {
+            Log.i(TAG, "  " + info);
+          }
+          
+          // Parse first device info
+          String firstDevice = deviceInfo[0];
+          commissioningStatusTextView.setText(
+            "✓ Found commissioned device in fabric table!\n" +
+            deviceInfo.length + " device(s) commissioned\n" +
+            "Info: " + firstDevice + "\n\n" +
+            "Checking for connected CastingPlayer..."
+          );
+          
+          // Now try to find matching CastingPlayer
+          List<CastingPlayer> allPlayers = matterCastingPlayerDiscovery.getCastingPlayers();
           CastingPlayer commissionedPlayer = null;
-          for (CastingPlayer player : allPlayers) {
-            Log.d(TAG, "Found CastingPlayer: " + player.getDeviceName() + 
-                  ", State: " + player.getConnectionState());
-            
-            if (player.getConnectionState() == CastingPlayer.ConnectionState.CONNECTED) {
-              commissionedPlayer = player;
-              break;
+          
+          if (allPlayers != null && !allPlayers.isEmpty()) {
+            for (CastingPlayer player : allPlayers) {
+              Log.d(TAG, "Checking CastingPlayer: " + player.getDeviceName() + 
+                    ", State: " + player.getConnectionState());
+              
+              if (player.getConnectionState() == CastingPlayer.ConnectionState.CONNECTED) {
+                commissionedPlayer = player;
+                break;
+              }
             }
           }
           
           if (commissionedPlayer != null) {
             final CastingPlayer finalPlayer = commissionedPlayer;
             commissioningStatusTextView.setText(
-              "✓ Found commissioned device!\n" +
+              "✓ Found commissioned & connected device!\n" +
               "Device: " + finalPlayer.getDeviceName() + "\n" +
               "Device ID: " + finalPlayer.getDeviceId() + "\n\n" +
               "Navigating to command interface..."
             );
             
-            Log.i(TAG, "Found commissioned CastingPlayer: " + finalPlayer.getDeviceName() + 
-                  ", DeviceId: " + finalPlayer.getDeviceId());
+            Log.i(TAG, "Found connected CastingPlayer: " + finalPlayer.getDeviceName());
             
             // Navigate to ActionSelector after a brief delay
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -430,11 +450,14 @@ public class DiscoveryExampleFragment extends Fragment {
             }, 1500);
           } else {
             commissioningStatusTextView.setText(
-              "✗ No CONNECTED devices found.\n\n" +
-              "Found " + allPlayers.size() + " CastingPlayer(s) but none are connected.\n" +
-              "Please commission this app from your STB first."
+              "⚠ Device is commissioned but not yet in CastingPlayer list.\n\n" +
+              "The STB commissioned this app successfully.\n" +
+              "To send commands to STB:\n" +
+              "1. Click 'Start Discovery' above\n" +
+              "2. Wait for STB to appear in the list\n" +
+              "3. Click on the STB to connect and send commands"
             );
-            Log.i(TAG, "Found " + allPlayers.size() + " CastingPlayer(s) but none are CONNECTED");
+            Log.i(TAG, "Commissioned device found but no matching connected CastingPlayer. User needs to discover STB.");
           }
         });
       }).start();
