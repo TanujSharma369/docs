@@ -20,7 +20,7 @@ import android.util.Log;
 
 /**
  * Helper class to check for commissioned devices in the fabric table.
- * When the STB commissions this Android app externally, the device info
+ * When a device commissions this Android app externally, the device info
  * is stored in the fabric table. This helper allows checking for such devices.
  */
 public class CommissionedDeviceHelper {

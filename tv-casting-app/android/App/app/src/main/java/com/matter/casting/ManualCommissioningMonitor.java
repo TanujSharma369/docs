@@ -22,7 +22,7 @@ import com.matter.casting.core.MatterCastingPlayerDiscovery;
 import java.util.List;
 
 /**
- * Monitors for external commissioning completion (when STB commissions this Android app)
+ * Monitors for external commissioning completion (when a device commissions this Android app)
  * and provides callbacks when a commissioned CastingPlayer is detected.
  */
 public class ManualCommissioningMonitor {

@@ -37,7 +37,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Launch or stop applications on your STB"
+            android:text="Launch or stop applications on your device"
             android:textSize="14sp"
             android:padding="12dp"
             android:background="#E3F2FD"
@@ -144,7 +144,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="• Launch YouTube: catalogVendorID=0, applicationID=YouTube\n• Stop YouTube: catalogVendorID=0, applicationID=YouTube\n\nThe ApplicationLauncher cluster will send the launch/stop command to the STB."
+            android:text="• Launch YouTube: catalogVendorID=0, applicationID=YouTube\n• Stop YouTube: catalogVendorID=0, applicationID=YouTube\n\nThe ApplicationLauncher cluster will send the launch/stop command to the device."
             android:textSize="12sp"
             android:background="#FFFFFF"
             android:padding="12dp"

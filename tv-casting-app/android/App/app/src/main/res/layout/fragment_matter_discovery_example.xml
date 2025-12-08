@@ -23,6 +23,19 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp" />
 
+        <!-- Connection Status Indicator -->
+        <TextView
+            android:id="@+id/connectionStatusIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⚪ Not Connected"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:background="#E0E0E0"
+            android:gravity="center"
+            android:layout_marginBottom="12dp" />
+
         <TextView
             android:id="@+id/manualCommissioningCodeTextView"
             android:layout_width="match_parent"

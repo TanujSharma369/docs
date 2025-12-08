@@ -16,7 +16,7 @@ import com.R;
 
 /**
  * Remote Control Fragment - Provides a virtual TV remote interface to send KeypadInput commands
- * to a commissioned STB/TV device using Matter KeypadInput cluster.
+ * to a commissioned device using Matter KeypadInput cluster.
  */
 public class RemoteControlFragment extends Fragment {
   private static final String TAG = RemoteControlFragment.class.getSimpleName();

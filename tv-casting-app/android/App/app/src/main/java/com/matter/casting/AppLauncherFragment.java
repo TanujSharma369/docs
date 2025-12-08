@@ -16,7 +16,7 @@ import com.R;
 
 /**
  * Application Launcher Fragment - Provides interface to launch and stop applications
- * on a commissioned STB/TV device using Matter ApplicationLauncher cluster.
+ * on a commissioned device using Matter ApplicationLauncher cluster.
  */
 public class AppLauncherFragment extends Fragment {
   private static final String TAG = AppLauncherFragment.class.getSimpleName();

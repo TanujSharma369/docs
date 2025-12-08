@@ -53,7 +53,7 @@ void OnConnectionSuccess(TargetVideoPlayerInfo * videoPlayer)
     // Store the commissioned video player so we can use it to send commands
     gCommissionedVideoPlayer = videoPlayer;
     
-    ChipLogProgress(AppServer, "ManualCommissioningHelper::OnConnectionSuccess - STB commissioned successfully! Can now send commands.");
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::OnConnectionSuccess - Device commissioned successfully! Can now send commands.");
 }
 
 // Callback when connection fails

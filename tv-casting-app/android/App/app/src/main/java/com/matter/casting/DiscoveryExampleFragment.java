@@ -155,6 +155,9 @@ public class DiscoveryExampleFragment extends Fragment {
 
     Log.d(TAG, "onViewCreated() creating callbacks");
 
+    // Update connection status indicator
+    updateConnectionStatus();
+    
     // Setup manual commissioning section
     setupManualCommissioningSection();
     
@@ -166,7 +169,8 @@ public class DiscoveryExampleFragment extends Fragment {
   public void onResume() {
     Log.i(TAG, "onResume() called");
     super.onResume();
-    // Manual commissioning mode - no automatic discovery needed
+    // Update connection status when returning to this screen
+    updateConnectionStatus();
   }
 
   @Override
@@ -183,9 +187,34 @@ public class DiscoveryExampleFragment extends Fragment {
         CastingPlayer castingPlayer, boolean useCommissionerGeneratedPasscode);
   }
 
-
-
-
+  /**
+   * Updates the connection status indicator at the top of the screen
+   */
+  private void updateConnectionStatus() {
+    if (getView() == null) return;
+    
+    TextView connectionStatusIndicator = getView().findViewById(R.id.connectionStatusIndicator);
+    if (connectionStatusIndicator == null) return;
+    
+    new Thread(() -> {
+      boolean isConnected = ManualCommissioningHelper.hasCommissionedVideoPlayer();
+      String deviceInfo = isConnected ? ManualCommissioningHelper.getCommissionedVideoPlayerInfo() : "";
+      
+      if (getActivity() != null) {
+        getActivity().runOnUiThread(() -> {
+          if (isConnected) {
+            connectionStatusIndicator.setText("🟢 Connected: " + deviceInfo);
+            connectionStatusIndicator.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            connectionStatusIndicator.setTextColor(getResources().getColor(android.R.color.black));
+          } else {
+            connectionStatusIndicator.setText("⚪ Not Connected");
+            connectionStatusIndicator.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+            connectionStatusIndicator.setTextColor(getResources().getColor(android.R.color.white));
+          }
+        });
+      }
+    }).start();
+  }
 
   /**
    * Sets up the manual commissioning section with QR code, commissioning info,
@@ -215,13 +244,20 @@ public class DiscoveryExampleFragment extends Fragment {
         getActivity().runOnUiThread(() -> {
           if (err.hasNoError()) {
             commissioningStatusTextView.setText(
-              "✓ Commissioning window opened!\n" +
+              "Commissioning window opened!\n" +
               "App is now discoverable for 3 minutes.\n" +
               "Your commissioner can discover and commission this app.\n\n" +
-              "Once commissioned, your STB can send commands to this app.\n" +
-              "The app will detect the connection automatically."
+              "Once commissioned, your device can send commands to this app.\n" +
+              "The connection status will update automatically."
             );
             Log.i(TAG, "Successfully opened commissioning window");
+            
+            // Show toast notification
+            android.widget.Toast.makeText(
+              getContext(),
+              "✓ Commissioning Window Opened\nWaiting for device to connect...",
+              android.widget.Toast.LENGTH_SHORT
+            ).show();
             
             // Start monitoring for commissioned connection
             startMonitoringForCommissionedPlayer();
@@ -252,7 +288,7 @@ public class DiscoveryExampleFragment extends Fragment {
 
   /**
    * Sets up the "Check for Commissioned Device" button to detect if this app
-   * was commissioned externally (e.g., by an STB) and navigate to command interface
+   * was commissioned externally and navigate to command interface
    */
   private void setupNavigationButtons() {
     Button virtualRemoteButton = getView().findViewById(R.id.virtualRemoteButton);
@@ -268,7 +304,7 @@ public class DiscoveryExampleFragment extends Fragment {
       if (!hasPlayer) {
         commissioningStatusTextView.setText(
           "✗ No commissioned device found.\n\n" +
-          "Please open commissioning window and commission from your STB first."
+          "Please open commissioning window and commission from your device first."
         );
         return;
       }
@@ -292,7 +328,7 @@ public class DiscoveryExampleFragment extends Fragment {
       if (!hasPlayer) {
         commissioningStatusTextView.setText(
           "✗ No commissioned device found.\n\n" +
-          "Please open commissioning window and commission from your STB first."
+          "Please open commissioning window and commission from your device first."
         );
         return;
       }
@@ -329,11 +365,25 @@ public class DiscoveryExampleFragment extends Fragment {
           if (newPlayer.getConnectionState() == CastingPlayer.ConnectionState.CONNECTED) {
             Log.i(TAG, "Detected newly commissioned CastingPlayer: " + newPlayer.getDeviceName());
             
+            // Update connection status indicator
+            updateConnectionStatus();
+            
+            // Show success toast
+            if (getActivity() != null) {
+              getActivity().runOnUiThread(() -> {
+                android.widget.Toast.makeText(
+                  getContext(),
+                  "✓ Connection Successful!\nConnected to: " + newPlayer.getDeviceName(),
+                  android.widget.Toast.LENGTH_LONG
+                ).show();
+              });
+            }
+            
             TextView commissioningStatusTextView = getView().findViewById(R.id.commissioningStatusTextView);
             commissioningStatusTextView.setText(
               "✓ Successfully commissioned!\n" +
               "Connected to: " + newPlayer.getDeviceName() + "\n" +
-              "Navigating to command interface..."
+              "You can now use Virtual Remote or Application Launcher."
             );
             
             // Navigate to ActionSelector after a brief delay
