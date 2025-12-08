@@ -25,7 +25,6 @@
 #include <TargetVideoPlayerInfo.h>
 
 #include "../support/Converters-JNI.h"
-#include "../core/CastingPlayerDiscovery-JNI.h"
 
 #define JNI_METHOD(RETURN, METHOD_NAME) \
     extern "C" JNIEXPORT RETURN JNICALL Java_com_matter_casting_ManualCommissioningHelper_##METHOD_NAME
@@ -33,39 +32,27 @@
 using namespace chip;
 
 namespace {
-// Default commissioning window timeout: 3 minutes (180 seconds)
-JNI_METHOD(jobject, openBasicCommissioningWindow)(JNIEnv * env, jclass)
+
+// Callback when commissioning completes
+void OnCommissioningComplete(CHIP_ERROR err)
 {
-    chip::DeviceLayer::StackLock lock;
-    ChipLogProgress(AppServer, "ManualCommissioningHelper::openBasicCommissioningWindow() called");
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::OnCommissioningComplete called with %" CHIP_ERROR_FORMAT, err.Format());
+}
 
-    // Use CastingServer's OpenBasicCommissioningWindow with callbacks (like Linux app does)
-    // This will give us the TargetVideoPlayerInfo when commissioning succeeds
-    CastingServer::GetInstance()->Init();
-    
-    CommissioningCallbacks commissioningCallbacks;
-    commissioningCallbacks.commissioningComplete = OnCommissioningComplete;
-    
-    CHIP_ERROR err = CastingServer::GetInstance()->OpenBasicCommissioningWindow(
-        commissioningCallbacks, OnConnectionSuccess, OnConnectionFailure, OnNewOrUpdatedEndpoint);
+// Callback when connection succeeds - this gives us the commissioned device info!
+void OnConnectionSuccess(TargetVideoPlayerInfo * videoPlayer)
+{
+    ChipLogProgress(AppServer,
+                    "ManualCommissioningHelper::OnConnectionSuccess with Video Player(nodeId: 0x" ChipLogFormatX64
+                    ", fabricIndex: %d, deviceName: %s, vendorId: %d, productId: %d, deviceType: %d)",
+                    ChipLogValueX64(videoPlayer->GetNodeId()), videoPlayer->GetFabricIndex(), videoPlayer->GetDeviceName(),
+                    videoPlayer->GetVendorId(), videoPlayer->GetProductId(), videoPlayer->GetDeviceType());
+}
 
-    if (err == CHIP_NO_ERROR)
-    {
-        ChipLogProgress(AppServer,
-                        "ManualCommissioningHelper::openBasicCommissioningWindow() Successfully opened commissioning window for %d "
-                        "seconds",
-                        kDefaultCommissioningWindowTimeout);
-        // Log the onboarding payload for debugging
-        chip::DeviceLayer::ConfigurationMgr().LogDeviceConfig();
-    }
-    else
-    {
-        ChipLogError(AppServer, "ManualCommissioningHelper::openBasicCommissioningWindow() Failed to open commissioning window: %" CHIP_ERROR_FORMAT,
-                     err.Format());
-    }
-
-    return matter::casting::support::convertMatterErrorFromCppToJava(err);
-}   ChipLogError(AppServer, "ManualCommissioningHelper::OnConnectionFailure error: %" CHIP_ERROR_FORMAT, err.Format());
+// Callback when connection fails
+void OnConnectionFailure(CHIP_ERROR err)
+{
+    ChipLogError(AppServer, "ManualCommissioningHelper::OnConnectionFailure error: %" CHIP_ERROR_FORMAT, err.Format());
 }
 
 // Callback when new endpoint is discovered
@@ -81,15 +68,18 @@ JNI_METHOD(jobject, openBasicCommissioningWindow)(JNIEnv * env, jclass)
     chip::DeviceLayer::StackLock lock;
     ChipLogProgress(AppServer, "ManualCommissioningHelper::openBasicCommissioningWindow() called");
 
-    CHIP_ERROR err = chip::Server::GetInstance().GetCommissioningWindowManager().OpenBasicCommissioningWindow(
-        chip::System::Clock::Seconds16(kDefaultCommissioningWindowTimeout));
+    // Use CastingServer's OpenBasicCommissioningWindow with callbacks (like Linux app does)
+    CastingServer::GetInstance()->Init();
+    
+    CommissioningCallbacks commissioningCallbacks;
+    commissioningCallbacks.commissioningComplete = OnCommissioningComplete;
+    
+    CHIP_ERROR err = CastingServer::GetInstance()->OpenBasicCommissioningWindow(
+        commissioningCallbacks, OnConnectionSuccess, OnConnectionFailure, OnNewOrUpdatedEndpoint);
 
     if (err == CHIP_NO_ERROR)
     {
-        ChipLogProgress(AppServer,
-                        "ManualCommissioningHelper::openBasicCommissioningWindow() Successfully opened commissioning window for %d "
-                        "seconds",
-                        kDefaultCommissioningWindowTimeout);
+        ChipLogProgress(AppServer, "ManualCommissioningHelper::openBasicCommissioningWindow() Successfully opened commissioning window");
         // Log the onboarding payload for debugging
         chip::DeviceLayer::ConfigurationMgr().LogDeviceConfig();
     }

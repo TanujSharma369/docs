@@ -76,9 +76,9 @@ JNI_METHOD(jobjectArray, getCommissionedDeviceInfo)(JNIEnv * env, jclass)
     
     // Create String array to hold info
     jclass stringClass = env->FindClass("java/lang/String");
-    jobjectArray infoArray = env->NewObjectArray(fabricCount, stringClass, nullptr);
+    jobjectArray infoArray = env->NewObjectArray(static_cast<jsize>(fabricCount), stringClass, nullptr);
     
-    size_t index = 0;
+    jsize index = 0;
     for (const auto & fabricInfo : fabricTable)
     {
         if (fabricInfo.IsInitialized())
