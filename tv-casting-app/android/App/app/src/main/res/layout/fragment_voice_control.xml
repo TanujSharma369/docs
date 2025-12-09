@@ -60,8 +60,8 @@
                 android:layout_weight="1"
                 android:text="🎤 START LISTENING"
                 android:textStyle="bold"
-                android:background="@android:color/holo_green_dark"
                 android:textColor="#FFFFFF"
+                android:backgroundTint="#4CAF50"
                 android:layout_marginEnd="8dp"/>
 
             <Button
@@ -71,8 +71,8 @@
                 android:layout_weight="1"
                 android:text="⏹️ STOP"
                 android:textStyle="bold"
-                android:background="@android:color/holo_red_dark"
                 android:textColor="#FFFFFF"
+                android:backgroundTint="#F44336"
                 android:layout_marginStart="8dp"/>
         </LinearLayout>
 
@@ -84,6 +84,7 @@
             android:text="⏸️ Ready to listen"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:textColor="#000000"
             android:padding="16dp"
             android:background="#FFFFFF"
             android:gravity="center"
@@ -96,6 +97,7 @@
             android:layout_height="wrap_content"
             android:text="Last command: None"
             android:textSize="14sp"
+            android:textColor="#000000"
             android:padding="12dp"
             android:background="#FFF9C4"
             android:layout_marginBottom="16dp"/>
@@ -119,6 +121,7 @@
             android:text="Voice Command Examples"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="#000000"
             android:paddingBottom="8dp"/>
 
         <TextView
@@ -126,6 +129,7 @@
             android:layout_height="wrap_content"
             android:text="Navigation:\n• &quot;Press left&quot;\n• &quot;Press right&quot;\n• &quot;Press up&quot;\n• &quot;Press down&quot;\n• &quot;Press select&quot;\n\nApplication Commands:\n• &quot;Launch YouTube&quot;\n• &quot;Open Netflix&quot;\n• &quot;Stop YouTube&quot;\n• &quot;Close Netflix&quot;\n\nVolume:\n• &quot;Volume up&quot;\n• &quot;Volume down&quot;\n• &quot;Mute&quot;\n\nMedia:\n• &quot;Play&quot;\n• &quot;Pause&quot;\n• &quot;Stop&quot;\n• &quot;Rewind&quot;\n• &quot;Fast forward&quot;\n\nOther:\n• &quot;Home&quot; or &quot;Menu&quot;\n• &quot;Back&quot;\n• &quot;Channel up/down&quot;\n• &quot;Number 1&quot; through &quot;Number 9&quot;\n• &quot;Power&quot;"
             android:textSize="14sp"
+            android:textColor="#000000"
             android:padding="12dp"
             android:background="#F0F0F0"
             android:layout_marginBottom="16dp"/>
