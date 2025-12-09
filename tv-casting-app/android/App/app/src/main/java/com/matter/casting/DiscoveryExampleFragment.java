@@ -329,37 +329,10 @@ public class DiscoveryExampleFragment extends Fragment {
    * was commissioned externally and navigate to command interface
    */
   private void setupNavigationButtons() {
-    Button unifiedControlButton = getView().findViewById(R.id.unifiedControlButton);
     Button virtualRemoteButton = getView().findViewById(R.id.virtualRemoteButton);
     Button appLauncherButton = getView().findViewById(R.id.appLauncherButton);
     Button voiceControlButton = getView().findViewById(R.id.voiceControlButton);
     TextView commissioningStatusTextView = getView().findViewById(R.id.commissioningStatusTextView);
-    
-    // Unified Control button - navigate to UnifiedControlFragment (RECOMMENDED)
-    if (unifiedControlButton != null) {
-      unifiedControlButton.setOnClickListener(v -> {
-        Log.i(TAG, "Unified Control button clicked");
-        
-        // Check if device is commissioned
-        boolean hasPlayer = ManualCommissioningHelper.hasCommissionedVideoPlayer();
-        if (!hasPlayer) {
-          commissioningStatusTextView.setText(
-            "✗ No commissioned device found.\n\n" +
-            "Please open commissioning window and commission from your device first."
-          );
-          return;
-        }
-        
-        // Navigate to UnifiedControlFragment
-        if (getActivity() != null) {
-          getActivity().getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.main_fragment_container, new UnifiedControlFragment())
-            .addToBackStack(null)
-            .commit();
-        }
-      });
-    }
     
     // Virtual Remote button - navigate to RemoteControlFragment
     virtualRemoteButton.setOnClickListener(v -> {

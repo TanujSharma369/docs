@@ -89,26 +89,6 @@
             android:paddingBottom="8dp" />
 
         <Button
-            android:id="@+id/unifiedControlButton"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="📱 ALL-IN-ONE CONTROLLER"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="#673AB7" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Individual Controls (Legacy)"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="italic"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:textColor="#666666" />
-
-        <Button
             android:id="@+id/virtualRemoteButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
