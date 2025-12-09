@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- Header with Device Status -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:elevation="4dp"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📱 Device Controller"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/unifiedDeviceStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Checking connection..."
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:background="#F0F0F0"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
+    <!-- Tab Layout -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/controlTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:elevation="2dp"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabTextColor="#666666"
+        app:tabSelectedTextColor="#2196F3"
+        app:tabIndicatorColor="#2196F3"
+        app:tabIndicatorHeight="3dp">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎮 Remote"
+            android:icon="@android:drawable/ic_menu_view"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📺 Apps"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎤 Voice"/>
+    </com.google.android.material.tabs.TabLayout>
+
+    <!-- Scrollable Content Container -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- SECTION 1: REMOTE CONTROL -->
+            <LinearLayout
+                android:id="@+id/remoteControlSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Virtual Remote Control"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="12dp"
+                    android:gravity="center"/>
+
+                <!-- Power Button -->
+                <Button
+                    android:id="@+id/btnPower"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="⚡ POWER"
+                    android:textStyle="bold"
+                    android:backgroundTint="#F44336"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- D-Pad Navigation -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    android:padding="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/btnUp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:text="▲"
+                        android:textSize="24sp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnLeft"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:text="◀"
+                            android:textSize="24sp"/>
+
+                        <Button
+                            android:id="@+id/btnSelect"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:text="OK"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:backgroundTint="#4CAF50"
+                            android:layout_margin="4dp"/>
+
+                        <Button
+                            android:id="@+id/btnRight"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:text="▶"
+                            android:textSize="24sp"/>
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnDown"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:text="▼"
+                        android:textSize="24sp"/>
+                </LinearLayout>
+
+                <!-- Menu Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <Button
+                        android:id="@+id/btnHome"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="🏠 Home"
+                        android:layout_marginEnd="4dp"/>
+
+                    <Button
+                        android:id="@+id/btnMenu"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="☰ Menu"
+                        android:layout_marginStart="4dp"/>
+
+                    <Button
+                        android:id="@+id/btnBack"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="← Back"
+                        android:layout_marginStart="4dp"/>
+                </LinearLayout>
+
+                <!-- Volume Controls -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <Button
+                        android:id="@+id/btnVolumeUp"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="🔊 Vol+"
+                        android:layout_marginEnd="4dp"/>
+
+                    <Button
+                        android:id="@+id/btnMute"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="🔇 Mute"
+                        android:layout_marginHorizontal="4dp"/>
+
+                    <Button
+                        android:id="@+id/btnVolumeDown"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="🔉 Vol-"
+                        android:layout_marginStart="4dp"/>
+                </LinearLayout>
+
+                <!-- Channel Controls -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <Button
+                        android:id="@+id/btnChannelUp"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="📺 CH+"
+                        android:layout_marginEnd="4dp"/>
+
+                    <Button
+                        android:id="@+id/btnChannelDown"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="📺 CH-"
+                        android:layout_marginStart="4dp"/>
+                </LinearLayout>
+
+                <!-- Media Controls -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <Button
+                        android:id="@+id/btnRewind"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="⏪"
+                        android:textSize="20sp"
+                        android:layout_marginEnd="2dp"/>
+
+                    <Button
+                        android:id="@+id/btnPlay"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="▶️"
+                        android:textSize="20sp"
+                        android:layout_marginHorizontal="2dp"/>
+
+                    <Button
+                        android:id="@+id/btnPause"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="⏸"
+                        android:textSize="20sp"
+                        android:layout_marginHorizontal="2dp"/>
+
+                    <Button
+                        android:id="@+id/btnStop"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="⏹"
+                        android:textSize="20sp"
+                        android:layout_marginHorizontal="2dp"/>
+
+                    <Button
+                        android:id="@+id/btnFastForward"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="⏩"
+                        android:textSize="20sp"
+                        android:layout_marginStart="2dp"/>
+                </LinearLayout>
+
+                <!-- Number Pad -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Number Pad"
+                    android:textStyle="bold"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:gravity="center"/>
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="3"
+                    android:rowCount="4"
+                    android:alignmentMode="alignBounds">
+
+                    <Button
+                        android:id="@+id/btn1"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:text="1"
+                        android:textSize="20sp"
+                        android:layout_margin="2dp"/>
+
+                    <Button
+                        android:id="@+id/btn2"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:text="2"
+                        android:textSize="20sp"
+                        android:layout_margin="2dp"/>
+
+                    <Button
+                        android:id="@+id/btn3"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:text="3"
+                        android:textSize="20sp"
+                        android:layout_margin="2dp"/>
+
+                    <Button
+                        android:id="@+id/btn4"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:text="4"
+                        android:textSize="20sp"
+                        android:layout_margin="2dp"/>
+
+                    <Button
+                        android:id="@+id/btn5"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:text="5"
+                        android:textSize="20sp"
+                        android:layout_margin="2dp"/>
+
+                    <Button
+                        android:id="@+id/btn6"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:text="6"
+                        android:textSize="20sp"
+                        android:layout_margin="2dp"/>
+
+                    <Button
+                        android:id="@+id/btn7"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:text="7"
+                        android:textSize="20sp"
+                        android:layout_margin="2dp"/>
+
+                    <Button
+                        android:id="@+id/btn8"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:text="8"
+                        android:textSize="20sp"
+                        android:layout_margin="2dp"/>
+
+                    <Button
+                        android:id="@+id/btn9"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:text="9"
+                        android:textSize="20sp"
+                        android:layout_margin="2dp"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"/>
+
+                    <Button
+                        android:id="@+id/btn0"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_columnWeight="1"
+                        android:text="0"
+                        android:textSize="20sp"
+                        android:layout_margin="2dp"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"/>
+                </GridLayout>
+
+            </LinearLayout>
+
+            <!-- SECTION 2: APP LAUNCHER -->
+            <LinearLayout
+                android:id="@+id/appLauncherSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Application Launcher"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="12dp"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/appLauncherStatusText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ready to launch apps"
+                    android:textSize="14sp"
+                    android:padding="12dp"
+                    android:background="#E3F2FD"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- YouTube -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📺 YouTube"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:paddingBottom="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/launchYouTubeButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="▶️ Launch"
+                            android:backgroundTint="#FF0000"
+                            android:layout_marginEnd="4dp"/>
+
+                        <Button
+                            android:id="@+id/stopYouTubeButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="⏹ Stop"
+                            android:backgroundTint="#757575"
+                            android:layout_marginStart="4dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Netflix -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🎬 Netflix"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:paddingBottom="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/launchNetflixButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="▶️ Launch"
+                            android:backgroundTint="#E50914"
+                            android:layout_marginEnd="4dp"/>
+
+                        <Button
+                            android:id="@+id/stopNetflixButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="⏹ Stop"
+                            android:backgroundTint="#757575"
+                            android:layout_marginStart="4dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Prime Video -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📦 Prime Video"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:paddingBottom="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/launchPrimeButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="▶️ Launch"
+                            android:backgroundTint="#00A8E1"
+                            android:layout_marginEnd="4dp"/>
+
+                        <Button
+                            android:id="@+id/stopPrimeButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="⏹ Stop"
+                            android:backgroundTint="#757575"
+                            android:layout_marginStart="4dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Disney+ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🏰 Disney+"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:paddingBottom="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/launchDisneyButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="▶️ Launch"
+                            android:backgroundTint="#113CCF"
+                            android:layout_marginEnd="4dp"/>
+
+                        <Button
+                            android:id="@+id/stopDisneyButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="⏹ Stop"
+                            android:backgroundTint="#757575"
+                            android:layout_marginStart="4dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- SECTION 3: VOICE CONTROL -->
+            <LinearLayout
+                android:id="@+id/voiceControlSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Voice Control"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="12dp"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Control your device using voice commands"
+                    android:textSize="14sp"
+                    android:padding="12dp"
+                    android:background="#E3F2FD"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Voice Control Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <Button
+                        android:id="@+id/startListeningButton"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:text="🎤 START LISTENING"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:backgroundTint="#4CAF50"
+                        android:layout_marginEnd="8dp"/>
+
+                    <Button
+                        android:id="@+id/stopListeningButton"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:text="⏹️ STOP"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:backgroundTint="#F44336"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+                <!-- Listening Status -->
+                <TextView
+                    android:id="@+id/listeningStatusText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="⏸️ Ready to listen"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:padding="16dp"
+                    android:background="#FFFFFF"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"
+                    android:elevation="2dp"/>
+
+                <!-- Last Command -->
+                <TextView
+                    android:id="@+id/lastCommandText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Last command: None"
+                    android:textSize="14sp"
+                    android:padding="12dp"
+                    android:background="#FFFFFF"
+                    android:layout_marginBottom="16dp"
+                    android:elevation="2dp"/>
+
+                <!-- Voice Command Examples -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Voice Command Examples"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:paddingBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#FFFFFF"
+                    android:padding="12dp"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📱 Navigation:"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• &quot;Press left/right/up/down&quot;\n• &quot;Press select&quot; or &quot;Press OK&quot;\n• &quot;Go home&quot; or &quot;Press back&quot;"
+                        android:paddingBottom="8dp"
+                        android:textColor="#666666"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📺 Apps:"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• &quot;Launch YouTube/Netflix/Prime/Disney&quot;\n• &quot;Stop YouTube/Netflix&quot;"
+                        android:paddingBottom="8dp"
+                        android:textColor="#666666"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🔊 Volume:"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• &quot;Volume up&quot; or &quot;Louder&quot;\n• &quot;Volume down&quot; or &quot;Quieter&quot;\n• &quot;Mute&quot;"
+                        android:paddingBottom="8dp"
+                        android:textColor="#666666"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="▶️ Media:"
+                        android:textStyle="bold"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• &quot;Play&quot;, &quot;Pause&quot;, &quot;Stop&quot;\n• &quot;Rewind&quot; or &quot;Fast forward&quot;"
+                        android:textColor="#666666"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </FrameLayout>
+    </ScrollView>
+
+</LinearLayout>
