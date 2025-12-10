@@ -30,10 +30,8 @@
         android:fillColor="#4A9FFF"
         android:pathData="M15.5,7 L15.5,17 L16.5,17 L16.5,7 Z"/>
     
-    <!-- Center pulse dot -->
-    <circle
+    <!-- Center pulse dot (using path instead of circle for compatibility) -->
+    <path
         android:fillColor="#6BB6FF"
-        android:cx="12"
-        android:cy="12"
-        android:radius="1.5"/>
+        android:pathData="M12,10.5 A1.5,1.5 0 0,1 13.5,12 A1.5,1.5 0 0,1 12,13.5 A1.5,1.5 0 0,1 10.5,12 A1.5,1.5 0 0,1 12,10.5 Z"/>
 </vector>
