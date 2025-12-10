@@ -260,6 +260,7 @@ public class DiscoveryExampleFragment extends Fragment {
   /**
    * Sets up the manual commissioning section with QR code, commissioning info,
    * and button to open commissioning window
+   * AUTO-STARTS commissioning window for 10 minutes on launch
    */
   private void setupManualCommissioningSection() {
     TextView commissioningInfoTextView = getView().findViewById(R.id.commissioningInfoTextView);
@@ -273,28 +274,32 @@ public class DiscoveryExampleFragment extends Fragment {
     String infoText = "Passcode: " + setupPasscode + " | Discriminator: " + discriminator;
     commissioningInfoTextView.setText(infoText);
 
-    // Setup button click listener
+    // AUTO-START: Open commissioning window for 10 minutes immediately
+    autoStartCommissioningWindow(commissioningStatusTextView, openCommissioningWindowButton);
+
+    // Setup button click listener for manual re-open
     openCommissioningWindowButton.setOnClickListener(v -> {
-      Log.i(TAG, "Opening commissioning window for manual commissioning");
+      Log.i(TAG, "Manually opening commissioning window");
       commissioningStatusTextView.setText("Opening commissioning window...");
       openCommissioningWindowButton.setEnabled(false);
 
       new Thread(() -> {
-        MatterError err = ManualCommissioningHelper.openBasicCommissioningWindow();
+        // Open for 10 minutes (600 seconds)
+        MatterError err = ManualCommissioningHelper.openBasicCommissioningWindowWithTimeout(600);
         
         getActivity().runOnUiThread(() -> {
           if (err.hasNoError()) {
             commissioningStatusTextView.setText(
-              "Commissioning/pairing window opened!\n" +
-              "App is now discoverable for 3 minutes.\n"
+              "✓ Commissioning window opened!\n" +
+              "App is now discoverable for 10 minutes.\n"
             );
-            Log.i(TAG, "Successfully opened commissioning window");
+            Log.i(TAG, "Successfully opened commissioning window for 10 minutes");
             
             // Show toast notification
-            android.widget.Toast.makeText(
+            android:widget.Toast.makeText(
               getContext(),
-              " Commissioning Window Opened\nWaiting for device to connect...",
-              android.widget.Toast.LENGTH_SHORT
+              "✓ Commissioning Window Opened (10 min)\nWaiting for device...",
+              android.widget.Toast.LENGTH_LONG
             ).show();
             
             // Start monitoring for commissioned connection
@@ -309,18 +314,62 @@ public class DiscoveryExampleFragment extends Fragment {
         });
       }).start();
     });
+  }
 
-    // Check if window is already open
+  /**
+   * AUTO-START: Automatically opens commissioning window for 10 minutes on app launch
+   */
+  private void autoStartCommissioningWindow(TextView statusTextView, Button button) {
+    Log.i(TAG, "AUTO-START: Opening commissioning window for 10 minutes...");
+    statusTextView.setText("🔄 Auto-starting commissioning window (10 min)...");
+    button.setEnabled(false);
+
     new Thread(() -> {
-      boolean isOpen = ManualCommissioningHelper.isCommissioningWindowOpen();
-      getActivity().runOnUiThread(() -> {
-        if (isOpen) {
-          commissioningStatusTextView.setText("ℹ Commissioning window is already open");
-          openCommissioningWindowButton.setEnabled(false);
-          // Also start monitoring since window is open
-          startMonitoringForCommissionedPlayer();
-        }
-      });
+      // Open for 10 minutes (600 seconds)
+      MatterError err = ManualCommissioningHelper.openBasicCommissioningWindowWithTimeout(600);
+      
+      if (getActivity() != null) {
+        getActivity().runOnUiThread(() -> {
+          if (err.hasNoError()) {
+            statusTextView.setText(
+              "✓ AUTO-STARTED: Commissioning window open!\n" +
+              "Ready for pairing (10 minutes)\n" +
+              "Use Matter controller to commission this device."
+            );
+            Log.i(TAG, "AUTO-START: Successfully opened commissioning window for 10 minutes");
+            
+            // Show prominent toast
+            android.widget.Toast.makeText(
+              getContext(),
+              "✓ Ready for Pairing (10 min window)",
+              android.widget.Toast.LENGTH_LONG
+            ).show();
+            
+            // Start monitoring for commissioned connection
+            startMonitoringForCommissionedPlayer();
+            
+            // Re-enable button after a delay (allow manual restart)
+            new android.os.Handler().postDelayed(() -> {
+              button.setEnabled(true);
+              button.setText("Restart Commissioning Window");
+            }, 5000); // Enable after 5 seconds
+            
+          } else {
+            statusTextView.setText(
+              "✗ AUTO-START FAILED: " + err.getErrorMessage() + "\n" +
+              "Click button to try manually."
+            );
+            button.setEnabled(true);
+            Log.e(TAG, "AUTO-START: Failed to open commissioning window: " + err);
+            
+            android.widget.Toast.makeText(
+              getContext(),
+              "✗ Auto-start failed. Try manual button.",
+              android.widget.Toast.LENGTH_LONG
+            ).show();
+          }
+        });
+      }
     }).start();
   }
 
