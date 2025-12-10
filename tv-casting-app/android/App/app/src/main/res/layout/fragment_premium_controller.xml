@@ -12,21 +12,35 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Hidden UI elements for functionality -->
-        <ImageView
-            android:id="@+id/statusIndicator"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            android:src="@drawable/indicator_disconnected"/>
-        
-        <ImageView
-            android:id="@+id/voiceInputIcon"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            android:src="@drawable/ic_ai_voice"
-            android:contentDescription="Voice Control"/>
+        <!-- Header with status and voice -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+            
+            <!-- Status Indicator centered -->
+            <ImageView
+                android:id="@+id/statusIndicator"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/indicator_disconnected"/>
+            
+            <!-- Voice icon on right -->
+            <ImageView
+                android:id="@+id/voiceInputIcon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_ai_voice"
+                android:tint="#FFFFFF"
+                android:padding="10dp"
+                android:background="@drawable/bg_voice_input"
+                android:contentDescription="Voice Control"/>
+        </RelativeLayout>
 
         <!-- Quick Launch Apps -->
         <LinearLayout
