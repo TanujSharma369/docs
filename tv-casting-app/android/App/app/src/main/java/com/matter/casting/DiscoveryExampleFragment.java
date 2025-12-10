@@ -296,7 +296,7 @@ public class DiscoveryExampleFragment extends Fragment {
             Log.i(TAG, "Successfully opened commissioning window for 10 minutes");
             
             // Show toast notification
-            android:widget.Toast.makeText(
+            android.widget.Toast.makeText(
               getContext(),
               "✓ Commissioning Window Opened (10 min)\nWaiting for device...",
               android.widget.Toast.LENGTH_LONG
