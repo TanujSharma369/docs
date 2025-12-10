@@ -112,14 +112,22 @@ JNI_METHOD(jobject, openBasicCommissioningWindowWithTimeout)(JNIEnv * env, jclas
         return matter::casting::support::convertMatterErrorFromCppToJava(CHIP_ERROR_INVALID_ARGUMENT);
     }
 
-    CHIP_ERROR err = chip::Server::GetInstance().GetCommissioningWindowManager().OpenBasicCommissioningWindow(
+    // IMPORTANT: Register callbacks so gCommissionedVideoPlayer gets set when device commissions!
+    CastingServer::GetInstance()->Init();
+    
+    CommissioningCallbacks commissioningCallbacks;
+    commissioningCallbacks.commissioningComplete = OnCommissioningComplete;
+    
+    // Register the connection success callback that sets gCommissionedVideoPlayer
+    CHIP_ERROR err = CastingServer::GetInstance()->OpenBasicCommissioningWindow(
+        commissioningCallbacks, OnConnectionSuccess, OnConnectionFailure, OnNewOrUpdatedEndpoint,
         chip::System::Clock::Seconds16(static_cast<uint16_t>(timeoutSeconds)));
 
     if (err == CHIP_NO_ERROR)
     {
         ChipLogProgress(AppServer,
                         "ManualCommissioningHelper::openBasicCommissioningWindowWithTimeout() Successfully opened commissioning "
-                        "window for %d seconds",
+                        "window for %d seconds with callbacks registered",
                         timeoutSeconds);
         // Log the onboarding payload for debugging
         chip::DeviceLayer::ConfigurationMgr().LogDeviceConfig();
@@ -172,19 +180,6 @@ JNI_METHOD(jboolean, hasCommissionedVideoPlayer)(JNIEnv * env, jclass)
     chip::DeviceLayer::StackLock lock;
     ChipLogProgress(AppServer, "ManualCommissioningHelper::hasCommissionedVideoPlayer() called");
     
-    // Check both old and new APIs for commissioned device
-    CastingServer * castingServer = CastingServer::GetInstance();
-    if (castingServer != nullptr)
-    {
-        TargetVideoPlayerInfo * activePlayer = castingServer->GetActiveTargetVideoPlayer();
-        if (activePlayer != nullptr && activePlayer->IsInitialized())
-        {
-            ChipLogProgress(AppServer, "ManualCommissioningHelper::hasCommissionedVideoPlayer() Found active player via CastingServer");
-            return JNI_TRUE;
-        }
-    }
-    
-    // Fallback to legacy global variable
     bool hasPlayer = (gCommissionedVideoPlayer != nullptr);
     ChipLogProgress(AppServer, "ManualCommissioningHelper::hasCommissionedVideoPlayer() returns: %s", hasPlayer ? "true" : "false");
     
