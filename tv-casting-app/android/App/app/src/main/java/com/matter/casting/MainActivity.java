@@ -35,6 +35,11 @@ public class MainActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    
+    // Hide action bar
+    if (getSupportActionBar() != null) {
+      getSupportActionBar().hide();
+    }
 
     Log.i(TAG, "ChipCastingSimplified = " + GlobalCastingConstants.ChipCastingSimplified);
     boolean ret =
