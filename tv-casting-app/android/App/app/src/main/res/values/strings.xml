@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CHIPTVCastingApp</string>
+    <string name="app_name">Remote</string>
     <string name="cert_test_launcher_fragment_title">Certification Test Launcher</string>
     <string name="cert_test_launcher_command_title">Launch Test</string>
     <string name="launch_cert_test_button_text">Launch</string>

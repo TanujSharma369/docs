@@ -105,13 +105,9 @@ public class PremiumControllerFragment extends Fragment {
     if (ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
       // Connected - Green indicator
       connectionIndicator.setBackgroundResource(R.drawable.indicator_connected);
-      statusHintText.setText("Ready");
-      statusHintText.setTextColor(getResources().getColor(android.R.color.holo_green_light));
     } else {
       // Disconnected - Red indicator
       connectionIndicator.setBackgroundResource(R.drawable.indicator_disconnected);
-      statusHintText.setText("Pairing...");
-      statusHintText.setTextColor(getResources().getColor(android.R.color.holo_red_light));
     }
   }
   
@@ -229,8 +225,6 @@ public class PremiumControllerFragment extends Fragment {
     String lowerCommand = command.toLowerCase().trim();
     Log.i(TAG, "Voice command: " + lowerCommand);
     
-    statusHintText.setText("\"" + command + "\"");
-    
     // App launch commands
     if (lowerCommand.contains("youtube") || lowerCommand.contains("you tube")) {
       launchApp("YouTube");
@@ -302,20 +296,8 @@ public class PremiumControllerFragment extends Fragment {
       return;
     }
     
-    statusHintText.setText("Launching " + appName + "...");
-    
     new Thread(() -> {
-      boolean success = launchAppNative(0, appName);
-      
-      if (getActivity() != null) {
-        getActivity().runOnUiThread(() -> {
-          if (success) {
-            statusHintText.setText(appName + " launched");
-          } else {
-            statusHintText.setText("Failed");
-          }
-        });
-      }
+      launchAppNative(0, appName);
     }).start();
   }
   
@@ -340,11 +322,7 @@ public class PremiumControllerFragment extends Fragment {
       return;
     }
     
-    boolean success = sendKeyToDevice(keyCode);
-    
-    if (success) {
-      statusHintText.setText(keyName);
-    }
+    sendKeyToDevice(keyCode);
   }
   
   @Override
