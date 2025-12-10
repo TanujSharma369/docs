@@ -1,17 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Netflix icon -->
+<!-- Premium 3D matte-black Netflix icon with embossed N -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    
+    <!-- Rounded square background with deep black gradient -->
     <path
-        android:fillColor="#E50914"
-        android:pathData="M5,3 L9,3 L9,21 L5,21 Z"/>
+        android:pathData="M10,0h44c5.5,0,10,4.5,10,10v44c0,5.5-4.5,10-10,10h-44c-5.5,0-10-4.5-10-10v-44c0-5.5,4.5-10,10-10z"
+        android:fillColor="#0A0A0A"/>
+    
+    <!-- Soft shadow layer for depth -->
     <path
-        android:fillColor="#E50914"
-        android:pathData="M15,3 L19,3 L19,21 L15,21 Z"/>
+        android:pathData="M10,1h44c5,0,9,4,9,9v44c0,5-4,9-9,9h-44c-5,0-9-4-9-9v-44c0-5,4-9,9-9z"
+        android:fillColor="#000000"
+        android:fillAlpha="0.4"/>
+    
+    <!-- Left bar - bottom shadow -->
     <path
-        android:fillColor="#B20710"
-        android:pathData="M9,3 L15,21 L11,21 L5,3 Z"/>
+        android:pathData="M22,20h6v24h-6z"
+        android:fillColor="#000000"/>
+    
+    <!-- Left bar - main highlight -->
+    <path
+        android:pathData="M22,19h6v24h-6z"
+        android:fillColor="#1A1A1A"/>
+    
+    <!-- Left bar - inner highlight for depth -->
+    <path
+        android:pathData="M23,20h4v22h-4z"
+        android:fillColor="#2D2D2D"/>
+    
+    <!-- Left bar - glossy highlight -->
+    <path
+        android:pathData="M23.5,20.5h2.5v10h-2.5z"
+        android:fillColor="#404040"
+        android:fillAlpha="0.6"/>
+    
+    <!-- Right bar - bottom shadow -->
+    <path
+        android:pathData="M36,20h6v24h-6z"
+        android:fillColor="#000000"/>
+    
+    <!-- Right bar - main highlight -->
+    <path
+        android:pathData="M36,19h6v24h-6z"
+        android:fillColor="#1A1A1A"/>
+    
+    <!-- Right bar - inner highlight for depth -->
+    <path
+        android:pathData="M37,20h4v22h-4z"
+        android:fillColor="#2D2D2D"/>
+    
+    <!-- Right bar - glossy highlight -->
+    <path
+        android:pathData="M37.5,20.5h2.5v10h-2.5z"
+        android:fillColor="#404040"
+        android:fillAlpha="0.6"/>
+    
+    <!-- Diagonal bar - bottom shadow -->
+    <path
+        android:pathData="M28,19l8,25h-6l-8-25z"
+        android:fillColor="#000000"/>
+    
+    <!-- Diagonal bar - main highlight -->
+    <path
+        android:pathData="M28,18.5l8,24.5h-6l-8-24.5z"
+        android:fillColor="#1A1A1A"/>
+    
+    <!-- Diagonal bar - inner highlight for depth -->
+    <path
+        android:pathData="M29,19.5l6,20h-4l-6-20z"
+        android:fillColor="#2D2D2D"/>
+    
+    <!-- Diagonal bar - glossy highlight -->
+    <path
+        android:pathData="M29.5,20l5,15h-3l-5-15z"
+        android:fillColor="#404040"
+        android:fillAlpha="0.7"/>
+    
+    <!-- Subtle top-left highlight for 3D rounded square effect -->
+    <path
+        android:pathData="M10,2c-4.4,0-8,3.6-8,8v10c0,-4.4,3.6-8,8-8h10c4.4,0,8-3.6,8-8h-10c-3,0-5.7,1.2-8,3z"
+        android:fillColor="#1F1F1F"
+        android:fillAlpha="0.5"/>
+    
+    <!-- Ambient occlusion shadow in corners -->
+    <path
+        android:pathData="M10,1c-5,0-9,4-9,9c0-3.7,2-6.9,5-8.6c0.8-0.4,1.7-0.7,2.9-0.7h40c-4.4,0-8,3.6-8,8c0-2.2-0.9-4.2-2.3-5.7c-1.4-1.4-3.5-2.3-5.7-2.3h-23z"
+        android:fillColor="#000000"
+        android:fillAlpha="0.2"/>
 </vector>
