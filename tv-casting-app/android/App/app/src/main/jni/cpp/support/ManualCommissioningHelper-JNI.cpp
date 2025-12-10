@@ -112,16 +112,20 @@ JNI_METHOD(jobject, openBasicCommissioningWindowWithTimeout)(JNIEnv * env, jclas
         return matter::casting::support::convertMatterErrorFromCppToJava(CHIP_ERROR_INVALID_ARGUMENT);
     }
 
-    // IMPORTANT: Register callbacks so gCommissionedVideoPlayer gets set when device commissions!
+    // IMPORTANT: Use CastingServer API with callbacks so gCommissionedVideoPlayer gets set!
     CastingServer::GetInstance()->Init();
     
     CommissioningCallbacks commissioningCallbacks;
     commissioningCallbacks.commissioningComplete = OnCommissioningComplete;
     
-    // Register the connection success callback that sets gCommissionedVideoPlayer
+    // Use CastingServer's OpenBasicCommissioningWindow which registers callbacks properly
+    // Note: This uses default timeout (3 min), but ensures callbacks work correctly
     CHIP_ERROR err = CastingServer::GetInstance()->OpenBasicCommissioningWindow(
-        commissioningCallbacks, OnConnectionSuccess, OnConnectionFailure, OnNewOrUpdatedEndpoint,
-        chip::System::Clock::Seconds16(static_cast<uint16_t>(timeoutSeconds)));
+        commissioningCallbacks, OnConnectionSuccess, OnConnectionFailure, OnNewOrUpdatedEndpoint);
+    
+    // The timeout parameter is ignored because CastingServer doesn't support custom timeout
+    // But the important part is the callbacks will be registered and work correctly
+    ChipLogProgress(AppServer, "ManualCommissioningHelper: Requested %d seconds but using default timeout due to API limitations", timeoutSeconds);
 
     if (err == CHIP_NO_ERROR)
     {
