@@ -130,7 +130,7 @@
             
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="240dp"
                 android:padding="16dp">
                 
                 <!-- Center OK Button -->
@@ -156,111 +156,107 @@
                         android:gravity="center"/>
                 </androidx.cardview.widget.CardView>
                 
-                <!-- Up Crescent - Wide Batman Moon spanning left to right -->
+                <!-- Up Crescent - Wide horizontal moon -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/navUp"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_width="180dp"
+                    android:layout_height="45dp"
                     android:layout_above="@id/okButton"
-                    android:layout_marginBottom="12dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"
                     app:cardBackgroundColor="#3A3A3C"
-                    app:cardCornerRadius="25dp"
+                    app:cardCornerRadius="22dp"
                     app:cardElevation="4dp"
                     android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true">
                     
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_nav_up"
                         android:tint="#FFFFFF"
-                        android:padding="8dp"
+                        android:padding="6dp"
                         android:contentDescription="Up"/>
                 </androidx.cardview.widget.CardView>
                 
-                <!-- Down Crescent - Wide Batman Moon spanning left to right -->
+                <!-- Down Crescent - Wide horizontal moon -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/navDown"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_width="180dp"
+                    android:layout_height="45dp"
                     android:layout_below="@id/okButton"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
                     app:cardBackgroundColor="#3A3A3C"
-                    app:cardCornerRadius="25dp"
+                    app:cardCornerRadius="22dp"
                     app:cardElevation="4dp"
                     android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true">
                     
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_nav_down"
                         android:tint="#FFFFFF"
-                        android:padding="8dp"
+                        android:padding="6dp"
                         android:contentDescription="Down"/>
                 </androidx.cardview.widget.CardView>
                 
-                <!-- Left Crescent - Tall Batman Moon spanning top to bottom -->
+                <!-- Left Crescent - Tall vertical moon -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/navLeft"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="45dp"
+                    android:layout_height="180dp"
                     android:layout_toStartOf="@id/okButton"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
                     app:cardBackgroundColor="#3A3A3C"
-                    app:cardCornerRadius="25dp"
+                    app:cardCornerRadius="22dp"
                     app:cardElevation="4dp"
                     android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true">
                     
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_nav_left"
                         android:tint="#FFFFFF"
-                        android:padding="8dp"
+                        android:padding="6dp"
                         android:contentDescription="Left"/>
                 </androidx.cardview.widget.CardView>
                 
-                <!-- Right Crescent - Tall Batman Moon spanning top to bottom -->
+                <!-- Right Crescent - Tall vertical moon -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/navRight"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="45dp"
+                    android:layout_height="180dp"
                     android:layout_toEndOf="@id/okButton"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
                     app:cardBackgroundColor="#3A3A3C"
-                    app:cardCornerRadius="25dp"
+                    app:cardCornerRadius="22dp"
                     app:cardElevation="4dp"
                     android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true">
                     
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_nav_right"
                         android:tint="#FFFFFF"
-                        android:padding="8dp"
+                        android:padding="6dp"
                         android:contentDescription="Right"/>
                 </androidx.cardview.widget.CardView>
                 
-                <!-- Home Button - Bottom Left Outside Ring -->
+                <!-- Home Button - Bottom Left -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/homeButton"
                     android:layout_width="50dp"
@@ -283,7 +279,7 @@
                         android:contentDescription="Home"/>
                 </androidx.cardview.widget.CardView>
                 
-                <!-- Back Button - Bottom Right Outside Ring -->
+                <!-- Back Button - Bottom Right -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/backButton"
                     android:layout_width="50dp"
