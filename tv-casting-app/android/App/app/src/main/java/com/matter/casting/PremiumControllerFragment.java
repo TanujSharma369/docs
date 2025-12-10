@@ -32,8 +32,7 @@ public class PremiumControllerFragment extends Fragment {
   
   // UI Components
   private View voiceInputIcon;
-  private View connectionIndicator;
-  private TextView statusHintText;
+  private View statusIndicator;
   private SpeechRecognizer speechRecognizer;
   private boolean isListening = false;
   
@@ -87,8 +86,7 @@ public class PremiumControllerFragment extends Fragment {
   
   private void initializeViews(View view) {
     voiceInputIcon = view.findViewById(R.id.voiceInputIcon);
-    connectionIndicator = view.findViewById(R.id.connectionIndicator);
-    statusHintText = view.findViewById(R.id.statusHintText);
+    statusIndicator = view.findViewById(R.id.statusIndicator);
   }
   
   private void checkPermissions() {
@@ -103,14 +101,10 @@ public class PremiumControllerFragment extends Fragment {
   private void updateConnectionStatus() {
     if (ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
       // Connected - Green indicator
-      connectionIndicator.setBackgroundResource(R.drawable.indicator_connected);
-      statusHintText.setText("Connected");
-      statusHintText.setTextColor(0xFF00FF00);
+      statusIndicator.setBackgroundResource(R.drawable.indicator_connected);
     } else {
       // Disconnected - Red indicator
-      connectionIndicator.setBackgroundResource(R.drawable.indicator_disconnected);
-      statusHintText.setText("Disconnected");
-      statusHintText.setTextColor(0xFFCCCCCC);
+      statusIndicator.setBackgroundResource(R.drawable.indicator_disconnected);
     }
   }
   
@@ -139,8 +133,6 @@ public class PremiumControllerFragment extends Fragment {
     speechRecognizer.setRecognitionListener(new RecognitionListener() {
       @Override
       public void onReadyForSpeech(Bundle params) {
-        statusHintText.setText("Listening...");
-        statusHintText.setTextColor(getResources().getColor(android.R.color.holo_blue_light));
         voiceInputIcon.setAlpha(1.0f);
       }
       
@@ -164,7 +156,6 @@ public class PremiumControllerFragment extends Fragment {
       
       @Override
       public void onError(int error) {
-        statusHintText.setText("Ready");
         isListening = false;
         voiceInputIcon.setAlpha(0.7f);
       }
@@ -277,20 +268,20 @@ public class PremiumControllerFragment extends Fragment {
   // ========== NAVIGATION CONTROLS ==========
   
   private void setupNavigationControls(View view) {
-    view.findViewById(R.id.btnNavUp).setOnClickListener(v -> sendKey(KEY_UP, "Up"));
-    view.findViewById(R.id.btnNavDown).setOnClickListener(v -> sendKey(KEY_DOWN, "Down"));
-    view.findViewById(R.id.btnNavLeft).setOnClickListener(v -> sendKey(KEY_LEFT, "Left"));
-    view.findViewById(R.id.btnNavRight).setOnClickListener(v -> sendKey(KEY_RIGHT, "Right"));
-    view.findViewById(R.id.btnNavOk).setOnClickListener(v -> sendKey(KEY_SELECT, "OK"));
-    view.findViewById(R.id.btnHome).setOnClickListener(v -> sendKey(KEY_ROOT_MENU, "Home"));
-    view.findViewById(R.id.btnBack).setOnClickListener(v -> sendKey(KEY_EXIT, "Back"));
+    view.findViewById(R.id.navUp).setOnClickListener(v -> sendKey(KEY_UP, "Up"));
+    view.findViewById(R.id.navDown).setOnClickListener(v -> sendKey(KEY_DOWN, "Down"));
+    view.findViewById(R.id.navLeft).setOnClickListener(v -> sendKey(KEY_LEFT, "Left"));
+    view.findViewById(R.id.navRight).setOnClickListener(v -> sendKey(KEY_RIGHT, "Right"));
+    view.findViewById(R.id.okButton).setOnClickListener(v -> sendKey(KEY_SELECT, "OK"));
+    view.findViewById(R.id.homeButton).setOnClickListener(v -> sendKey(KEY_ROOT_MENU, "Home"));
+    view.findViewById(R.id.backButton).setOnClickListener(v -> sendKey(KEY_EXIT, "Back"));
   }
   
   // ========== APP LAUNCHERS ==========
   
   private void setupAppLaunchers(View view) {
-    view.findViewById(R.id.btnYoutube).setOnClickListener(v -> launchApp("YouTube"));
-    view.findViewById(R.id.btnNetflix).setOnClickListener(v -> launchApp("Netflix"));
+    view.findViewById(R.id.youtubeCard).setOnClickListener(v -> launchApp("YouTube"));
+    view.findViewById(R.id.netflixCard).setOnClickListener(v -> launchApp("Netflix"));
   }
   
   private void launchApp(String appName) {
@@ -307,16 +298,16 @@ public class PremiumControllerFragment extends Fragment {
   // ========== KEYPAD ==========
   
   private void setupKeypad(View view) {
-    view.findViewById(R.id.btnKey0).setOnClickListener(v -> sendKey(KEY_NUMBER_0, "0"));
-    view.findViewById(R.id.btnKey1).setOnClickListener(v -> sendKey(KEY_NUMBER_1, "1"));
-    view.findViewById(R.id.btnKey2).setOnClickListener(v -> sendKey(KEY_NUMBER_2, "2"));
-    view.findViewById(R.id.btnKey3).setOnClickListener(v -> sendKey(KEY_NUMBER_3, "3"));
-    view.findViewById(R.id.btnKey4).setOnClickListener(v -> sendKey(KEY_NUMBER_4, "4"));
-    view.findViewById(R.id.btnKey5).setOnClickListener(v -> sendKey(KEY_NUMBER_5, "5"));
-    view.findViewById(R.id.btnKey6).setOnClickListener(v -> sendKey(KEY_NUMBER_6, "6"));
-    view.findViewById(R.id.btnKey7).setOnClickListener(v -> sendKey(KEY_NUMBER_7, "7"));
-    view.findViewById(R.id.btnKey8).setOnClickListener(v -> sendKey(KEY_NUMBER_8, "8"));
-    view.findViewById(R.id.btnKey9).setOnClickListener(v -> sendKey(KEY_NUMBER_9, "9"));
+    view.findViewById(R.id.key0).setOnClickListener(v -> sendKey(KEY_NUMBER_0, "0"));
+    view.findViewById(R.id.key1).setOnClickListener(v -> sendKey(KEY_NUMBER_1, "1"));
+    view.findViewById(R.id.key2).setOnClickListener(v -> sendKey(KEY_NUMBER_2, "2"));
+    view.findViewById(R.id.key3).setOnClickListener(v -> sendKey(KEY_NUMBER_3, "3"));
+    view.findViewById(R.id.key4).setOnClickListener(v -> sendKey(KEY_NUMBER_4, "4"));
+    view.findViewById(R.id.key5).setOnClickListener(v -> sendKey(KEY_NUMBER_5, "5"));
+    view.findViewById(R.id.key6).setOnClickListener(v -> sendKey(KEY_NUMBER_6, "6"));
+    view.findViewById(R.id.key7).setOnClickListener(v -> sendKey(KEY_NUMBER_7, "7"));
+    view.findViewById(R.id.key8).setOnClickListener(v -> sendKey(KEY_NUMBER_8, "8"));
+    view.findViewById(R.id.key9).setOnClickListener(v -> sendKey(KEY_NUMBER_9, "9"));
   }
   
   private void sendKey(int keyCode, String keyName) {
