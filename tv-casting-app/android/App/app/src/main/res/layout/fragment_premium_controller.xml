@@ -81,27 +81,19 @@
             android:gravity="center">
 
             <!-- UP -->
-            <androidx.cardview.widget.CardView
+            <ImageView
                 android:id="@+id/btnNavUp"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerHorizontal="true"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
+                android:src="@drawable/ic_nav_up"
+                android:contentDescription="Navigate Up"
                 android:clickable="true"
-                android:focusable="true">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="▲"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:gravity="center"/>
-            </androidx.cardview.widget.CardView>
+                android:focusable="true"
+                android:background="@android:color/transparent"/>
 
             <!-- LEFT -->
-            <androidx.cardview.widget.CardView
+            <ImageView
                 android:id="@+id/btnNavLeft"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -109,45 +101,28 @@
                 android:layout_toStartOf="@id/btnNavOk"
                 android:layout_marginTop="6dp"
                 android:layout_marginEnd="6dp"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
+                android:src="@drawable/ic_nav_left"
+                android:contentDescription="Navigate Left"
                 android:clickable="true"
-                android:focusable="true">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="◀"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:gravity="center"/>
-            </androidx.cardview.widget.CardView>
+                android:focusable="true"
+                android:background="@android:color/transparent"/>
 
             <!-- OK (CENTER) -->
-            <androidx.cardview.widget.CardView
+            <ImageView
                 android:id="@+id/btnNavOk"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_below="@id/btnNavUp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="6dp"
-                app:cardBackgroundColor="#0088FF"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="3dp"
+                android:src="@drawable/ic_nav_select"
+                android:contentDescription="Select/OK"
                 android:clickable="true"
-                android:focusable="true">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="OK"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
-            </androidx.cardview.widget.CardView>
+                android:focusable="true"
+                android:background="@android:color/transparent"/>
 
             <!-- RIGHT -->
-            <androidx.cardview.widget.CardView
+            <ImageView
                 android:id="@+id/btnNavRight"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -155,41 +130,25 @@
                 android:layout_toEndOf="@id/btnNavOk"
                 android:layout_marginTop="6dp"
                 android:layout_marginStart="6dp"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
+                android:src="@drawable/ic_nav_right"
+                android:contentDescription="Navigate Right"
                 android:clickable="true"
-                android:focusable="true">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="▶"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:gravity="center"/>
-            </androidx.cardview.widget.CardView>
+                android:focusable="true"
+                android:background="@android:color/transparent"/>
 
             <!-- DOWN -->
-            <androidx.cardview.widget.CardView
+            <ImageView
                 android:id="@+id/btnNavDown"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_below="@id/btnNavOk"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="6dp"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
+                android:src="@drawable/ic_nav_down"
+                android:contentDescription="Navigate Down"
                 android:clickable="true"
-                android:focusable="true">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="▼"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:gravity="center"/>
-            </androidx.cardview.widget.CardView>
+                android:focusable="true"
+                android:background="@android:color/transparent"/>
 
             <!-- HOME & BACK -->
             <LinearLayout
@@ -200,43 +159,27 @@
                 android:layout_marginTop="12dp"
                 android:orientation="horizontal">
 
-                <androidx.cardview.widget.CardView
+                <ImageView
                     android:id="@+id/btnHome"
-                    android:layout_width="70dp"
-                    android:layout_height="36dp"
-                    android:layout_marginEnd="6dp"
-                    app:cardBackgroundColor="#1A1A1A"
-                    app:cardCornerRadius="6dp"
-                    app:cardElevation="2dp"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_home"
+                    android:contentDescription="Home"
                     android:clickable="true"
-                    android:focusable="true">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Home"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
-                        android:gravity="center"/>
-                </androidx.cardview.widget.CardView>
+                    android:focusable="true"
+                    android:background="@android:color/transparent"/>
 
-                <androidx.cardview.widget.CardView
+                <ImageView
                     android:id="@+id/btnBack"
-                    android:layout_width="70dp"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="6dp"
-                    app:cardBackgroundColor="#1A1A1A"
-                    app:cardCornerRadius="6dp"
-                    app:cardElevation="2dp"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_back"
+                    android:contentDescription="Back"
                     android:clickable="true"
-                    android:focusable="true">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Back"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
-                        android:gravity="center"/>
-                </androidx.cardview.widget.CardView>
+                    android:focusable="true"
+                    android:background="@android:color/transparent"/>
             </LinearLayout>
         </RelativeLayout>
 
@@ -251,53 +194,29 @@
             android:paddingTop="4dp"
             android:paddingBottom="4dp">
 
-            <androidx.cardview.widget.CardView
+            <!-- YouTube Icon Button -->
+            <ImageView
                 android:id="@+id/btnYoutube"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                app:cardBackgroundColor="#CC0000"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="3dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_youtube"
+                android:contentDescription="YouTube"
                 android:clickable="true"
-                android:focusable="true">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginEnd="6dp"
-                        android:src="@drawable/ic_youtube"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="YouTube"
-                        android:textColor="#FFFFFF"
-                        android:textSize="12sp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                android:focusable="true"
+                android:background="@android:color/transparent"/>
 
-            <androidx.cardview.widget.CardView
+            <!-- Netflix Icon Button -->
+            <ImageView
                 android:id="@+id/btnNetflix"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                app:cardBackgroundColor="#E50914"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="3dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_netflix"
+                android:contentDescription="Netflix"
                 android:clickable="true"
-                android:focusable="true">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                android:focusable="true"
+                android:background="@android:color/transparent"/>
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
