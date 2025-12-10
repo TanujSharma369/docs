@@ -46,9 +46,24 @@ public class MainActivity extends AppCompatActivity
       return;
     }
 
+    // Auto-start commissioning in background
+    if (GlobalCastingConstants.ChipCastingSimplified) {
+      new Thread(() -> {
+        Log.i(TAG, "Auto-starting commissioning window for 10 minutes");
+        com.matter.casting.support.MatterError err = 
+            ManualCommissioningHelper.openBasicCommissioningWindowWithTimeout(600);
+        if (err.hasNoError()) {
+          Log.i(TAG, "Commissioning window opened successfully");
+        } else {
+          Log.e(TAG, "Failed to open commissioning window: " + err.getErrorMessage());
+        }
+      }).start();
+    }
+    
+    // Directly open Premium Controller as home page
     Fragment fragment = null;
     if (GlobalCastingConstants.ChipCastingSimplified) {
-      fragment = DiscoveryExampleFragment.newInstance();
+      fragment = new PremiumControllerFragment();
     } else {
       fragment = CommissionerDiscoveryFragment.newInstance(tvCastingApp);
     }

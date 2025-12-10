@@ -374,86 +374,10 @@ public class DiscoveryExampleFragment extends Fragment {
   }
 
   /**
-   * Sets up the "Check for Commissioned Device" button to detect if this app
-   * was commissioned externally and navigate to command interface
+   * No longer needed - Premium Controller is now the home page
    */
   private void setupNavigationButtons() {
-    Button virtualRemoteButton = getView().findViewById(R.id.virtualRemoteButton);
-    Button appLauncherButton = getView().findViewById(R.id.appLauncherButton);
-    Button voiceControlButton = getView().findViewById(R.id.voiceControlButton);
-    TextView commissioningStatusTextView = getView().findViewById(R.id.commissioningStatusTextView);
-    
-    // Virtual Remote button - navigate to RemoteControlFragment
-    virtualRemoteButton.setOnClickListener(v -> {
-      Log.i(TAG, "Virtual Remote button clicked");
-      
-      // Check if device is commissioned
-      boolean hasPlayer = ManualCommissioningHelper.hasCommissionedVideoPlayer();
-      if (!hasPlayer) {
-        commissioningStatusTextView.setText(
-          "✗ No commissioned device found.\n\n" +
-          "Please open commissioning window and commission from your device first."
-        );
-        return;
-      }
-      
-      // Navigate to RemoteControlFragment
-      if (getActivity() != null) {
-        getActivity().getSupportFragmentManager()
-          .beginTransaction()
-          .replace(R.id.main_fragment_container, new RemoteControlFragment())
-          .addToBackStack(null)
-          .commit();
-      }
-    });
-    
-    // Application Launcher button - navigate to AppLauncherFragment
-    appLauncherButton.setOnClickListener(v -> {
-      Log.i(TAG, "Application Launcher button clicked");
-      
-      // Check if device is commissioned
-      boolean hasPlayer = ManualCommissioningHelper.hasCommissionedVideoPlayer();
-      if (!hasPlayer) {
-        commissioningStatusTextView.setText(
-          "✗ No commissioned device found.\n\n" +
-          "Please open commissioning window and commission from your device first."
-        );
-        return;
-      }
-      
-      // Navigate to AppLauncherFragment
-      if (getActivity() != null) {
-        getActivity().getSupportFragmentManager()
-          .beginTransaction()
-          .replace(R.id.main_fragment_container, new AppLauncherFragment())
-          .addToBackStack(null)
-          .commit();
-      }
-    });
-    
-    // Voice Control button - navigate to VoiceControlFragment
-    voiceControlButton.setOnClickListener(v -> {
-      Log.i(TAG, "Voice Control button clicked");
-      
-      // Check if device is commissioned
-      boolean hasPlayer = ManualCommissioningHelper.hasCommissionedVideoPlayer();
-      if (!hasPlayer) {
-        commissioningStatusTextView.setText(
-          "✗ No commissioned device found.\n\n" +
-          "Please open commissioning window and commission from your device first."
-        );
-        return;
-      }
-      
-      // Navigate to VoiceControlFragment
-      if (getActivity() != null) {
-        getActivity().getSupportFragmentManager()
-          .beginTransaction()
-          .replace(R.id.main_fragment_container, new VoiceControlFragment())
-          .addToBackStack(null)
-          .commit();
-      }
-    });
+    // This fragment is no longer used as the main screen
   }
 
   /**

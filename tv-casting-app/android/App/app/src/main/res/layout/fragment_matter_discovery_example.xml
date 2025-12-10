@@ -73,44 +73,15 @@
             android:padding="8dp"
             android:layout_marginBottom="16dp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#CCCCCC"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Control Options"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textStyle="bold"
-            android:paddingBottom="8dp" />
-
-        <Button
-            android:id="@+id/virtualRemoteButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Virtual Remote Control"
-            android:layout_marginBottom="4dp"
-            android:backgroundTint="#2196F3" />
-
-        <Button
-            android:id="@+id/appLauncherButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Application Launcher"
-            android:layout_marginBottom="4dp"
-            android:backgroundTint="#FF9800" />
-
-        <Button
-            android:id="@+id/voiceControlButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🎤 Voice Control"
-            android:layout_marginBottom="4dp"
-            android:backgroundTint="#4CAF50" />
+            android:text="Opening Premium Controller..."
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="italic"
+            android:gravity="center"
+            android:padding="16dp"
+            android:layout_marginTop="16dp" />
 
         <TextView
             android:id="@+id/matterDiscoveryErrorTextView"
