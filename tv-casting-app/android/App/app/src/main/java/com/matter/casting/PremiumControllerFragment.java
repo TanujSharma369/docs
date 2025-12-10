@@ -105,9 +105,13 @@ public class PremiumControllerFragment extends Fragment {
     if (ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
       // Connected - Green indicator
       connectionIndicator.setBackgroundResource(R.drawable.indicator_connected);
+      statusHintText.setText("Connected");
+      statusHintText.setTextColor(0xFF00FF00);
     } else {
       // Disconnected - Red indicator
       connectionIndicator.setBackgroundResource(R.drawable.indicator_disconnected);
+      statusHintText.setText("Disconnected");
+      statusHintText.setTextColor(0xFFAAAAAA);
     }
   }
   
