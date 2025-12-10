@@ -1,0 +1,27 @@
+# Backup files
+*.bak
+*_backup.*
+*_backup/
+drawable_complex_backup/
+fragment_*_backup.xml
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build outputs
+build/
+out/
+*.apk
+*.aab
+
+# Gradle
+.gradle/
+local.properties
