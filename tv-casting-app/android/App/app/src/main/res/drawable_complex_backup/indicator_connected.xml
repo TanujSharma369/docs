@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bright green indicator for connected state with glow -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Glow effect -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#8800FF00"/>
+            <size android:width="12dp" android:height="12dp"/>
+        </shape>
+    </item>
+    <!-- Bright core -->
+    <item android:top="2dp" android:bottom="2dp" android:left="2dp" android:right="2dp">
+        <shape android:shape="oval">
+            <solid android:color="#00FF00"/>
+            <size android:width="8dp" android:height="8dp"/>
+        </shape>
+    </item>
+</layer-list>
