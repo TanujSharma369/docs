@@ -172,6 +172,19 @@ JNI_METHOD(jboolean, hasCommissionedVideoPlayer)(JNIEnv * env, jclass)
     chip::DeviceLayer::StackLock lock;
     ChipLogProgress(AppServer, "ManualCommissioningHelper::hasCommissionedVideoPlayer() called");
     
+    // Check both old and new APIs for commissioned device
+    CastingServer * castingServer = CastingServer::GetInstance();
+    if (castingServer != nullptr)
+    {
+        TargetVideoPlayerInfo * activePlayer = castingServer->GetActiveTargetVideoPlayer();
+        if (activePlayer != nullptr && activePlayer->IsInitialized())
+        {
+            ChipLogProgress(AppServer, "ManualCommissioningHelper::hasCommissionedVideoPlayer() Found active player via CastingServer");
+            return JNI_TRUE;
+        }
+    }
+    
+    // Fallback to legacy global variable
     bool hasPlayer = (gCommissionedVideoPlayer != nullptr);
     ChipLogProgress(AppServer, "ManualCommissioningHelper::hasCommissionedVideoPlayer() returns: %s", hasPlayer ? "true" : "false");
     
