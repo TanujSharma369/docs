@@ -12,22 +12,26 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header with title and status indicator -->
+        <!-- Header with voice icon and status indicator -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp">
             
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Remote"
-                android:textSize="28sp"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:layout_centerVertical="true"/>
+            <!-- Voice icon on left -->
+            <ImageView
+                android:id="@+id/voiceInputIcon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_ai_voice"
+                android:tint="#FFFFFF"
+                android:padding="10dp"
+                android:background="@drawable/bg_voice_input"
+                android:contentDescription="Voice Control"/>
             
-            <!-- Status Indicator -->
+            <!-- Status Indicator on right -->
             <ImageView
                 android:id="@+id/statusIndicator"
                 android:layout_width="12dp"
@@ -35,20 +39,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/indicator_disconnected"/>
-
-            <!-- Voice icon in corner -->
-            <ImageView
-                android:id="@+id/voiceInputIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_toStartOf="@id/statusIndicator"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_ai_voice"
-                android:tint="#FFFFFF"
-                android:padding="8dp"
-                android:background="@drawable/bg_voice_input"
-                android:contentDescription="Voice Control"/>
         </RelativeLayout>
 
         <!-- Quick Launch Apps -->
@@ -165,68 +155,100 @@
                 </androidx.cardview.widget.CardView>
                 
                 <!-- Up Arrow -->
-                <ImageView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/navUp"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_above="@id/okButton"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="4dp"
-                    android:src="@drawable/ic_nav_up"
-                    android:tint="#FFFFFF"
-                    android:padding="12dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:cardBackgroundColor="#3A3A3C"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp"
+                    android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="Up"/>
+                    android:focusable="true">
+                    
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_nav_up"
+                        android:tint="#FFFFFF"
+                        android:padding="12dp"
+                        android:contentDescription="Up"/>
+                </androidx.cardview.widget.CardView>
                 
                 <!-- Down Arrow -->
-                <ImageView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/navDown"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_below="@id/okButton"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
-                    android:src="@drawable/ic_nav_down"
-                    android:tint="#FFFFFF"
-                    android:padding="12dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:cardBackgroundColor="#3A3A3C"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp"
+                    android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="Down"/>
+                    android:focusable="true">
+                    
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_nav_down"
+                        android:tint="#FFFFFF"
+                        android:padding="12dp"
+                        android:contentDescription="Down"/>
+                </androidx.cardview.widget.CardView>
                 
                 <!-- Left Arrow -->
-                <ImageView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/navLeft"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_toStartOf="@id/okButton"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_nav_left"
-                    android:tint="#FFFFFF"
-                    android:padding="12dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:cardBackgroundColor="#3A3A3C"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp"
+                    android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="Left"/>
+                    android:focusable="true">
+                    
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_nav_left"
+                        android:tint="#FFFFFF"
+                        android:padding="12dp"
+                        android:contentDescription="Left"/>
+                </androidx.cardview.widget.CardView>
                 
                 <!-- Right Arrow -->
-                <ImageView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/navRight"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_toEndOf="@id/okButton"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="4dp"
-                    android:src="@drawable/ic_nav_right"
-                    android:tint="#FFFFFF"
-                    android:padding="12dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:cardBackgroundColor="#3A3A3C"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp"
+                    android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="Right"/>
+                    android:focusable="true">
+                    
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_nav_right"
+                        android:tint="#FFFFFF"
+                        android:padding="12dp"
+                        android:contentDescription="Right"/>
+                </androidx.cardview.widget.CardView>
                 
                 <!-- Home Button -->
                 <androidx.cardview.widget.CardView
