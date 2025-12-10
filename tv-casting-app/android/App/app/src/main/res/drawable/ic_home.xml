@@ -1,46 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Premium 3D matte-black HOME icon -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="48dp"
-    android:height="48dp"
-    android:viewportWidth="48"
-    android:viewportHeight="48">
-    
-    <!-- Rounded square background -->
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
     <path
-        android:pathData="M6,0h36c3.3,0,6,2.7,6,6v36c0,3.3-2.7,6-6,6h-36c-3.3,0-6-2.7-6-6v-36c0-3.3,2.7-6,6-6z"
-        android:fillColor="#0A0A0A"/>
-    
-    <!-- Shadow layer -->
-    <path
-        android:pathData="M6,1h36c2.8,0,5,2.2,5,5v36c0,2.8-2.2,5-5,5h-36c-2.8,0-5-2.2-5-5v-36c0-2.8,2.2-5,5-5z"
-        android:fillColor="#000000"
-        android:fillAlpha="0.4"/>
-    
-    <!-- House roof - shadow -->
-    <path
-        android:pathData="M24,13l-12,10h3v10h6v-7h6v7h6v-10h3z"
-        android:fillColor="#000000"/>
-    
-    <!-- House roof - highlight -->
-    <path
-        android:pathData="M24,12l-12,10h3v10h6v-7h6v7h6v-10h3z"
-        android:fillColor="#1A1A1A"/>
-    
-    <!-- House - inner highlight -->
-    <path
-        android:pathData="M24,13.5l-10,8.5h2.5v8.5h5v-6h5v6h5v-8.5h2.5z"
-        android:fillColor="#2D2D2D"/>
-    
-    <!-- Glossy highlight on roof -->
-    <path
-        android:pathData="M24,14.5l-7,6h2v5h3v-4h4v4h3v-5h2z"
-        android:fillColor="#404040"
-        android:fillAlpha="0.6"/>
-    
-    <!-- Top-left corner highlight -->
-    <path
-        android:pathData="M6,1.5c-2.5,0-4.5,2-4.5,4.5v6c0,-2.5,2-4.5,4.5-4.5h6c2.5,0,4.5-2,4.5-4.5h-6c-1.7,0-3.2,0.7-4.5,1.5z"
-        android:fillColor="#1F1F1F"
-        android:fillAlpha="0.5"/>
+        android:fillColor="#FFFFFF"
+        android:pathData="M10,20v-6h4v6h5v-8h3L12,3L2,12h3v8z"/>
 </vector>
