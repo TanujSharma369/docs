@@ -34,7 +34,6 @@ public class PremiumControllerFragment extends Fragment {
   private View voiceInputIcon;
   private View connectionIndicator;
   private TextView statusHintText;
-  private View statusBadge;
   private SpeechRecognizer speechRecognizer;
   private boolean isListening = false;
   
@@ -90,7 +89,6 @@ public class PremiumControllerFragment extends Fragment {
     voiceInputIcon = view.findViewById(R.id.voiceInputIcon);
     connectionIndicator = view.findViewById(R.id.connectionIndicator);
     statusHintText = view.findViewById(R.id.statusHintText);
-    statusBadge = view.findViewById(R.id.statusBadge);
   }
   
   private void checkPermissions() {
@@ -104,14 +102,12 @@ public class PremiumControllerFragment extends Fragment {
   
   private void updateConnectionStatus() {
     if (ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
-      // Connected - Green glowing badge
-      statusBadge.setBackgroundResource(R.drawable.bg_status_connected);
+      // Connected - Green indicator
       connectionIndicator.setBackgroundResource(R.drawable.indicator_connected);
       statusHintText.setText("Connected");
-      statusHintText.setTextColor(0xFFCCCCCC);
+      statusHintText.setTextColor(0xFF00FF00);
     } else {
-      // Disconnected - Red translucent badge
-      statusBadge.setBackgroundResource(R.drawable.bg_status_disconnected);
+      // Disconnected - Red indicator
       connectionIndicator.setBackgroundResource(R.drawable.indicator_disconnected);
       statusHintText.setText("Disconnected");
       statusHintText.setTextColor(0xFFCCCCCC);
