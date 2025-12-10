@@ -20,15 +20,16 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp">
             
-            <!-- Status Indicator centered -->
+            <!-- Status Indicator top left -->
             <ImageView
                 android:id="@+id/statusIndicator"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:layout_centerInParent="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:src="@drawable/indicator_disconnected"/>
             
-            <!-- Voice icon on right -->
+            <!-- Voice icon top right -->
             <ImageView
                 android:id="@+id/voiceInputIcon"
                 android:layout_width="48dp"
