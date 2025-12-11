@@ -32,7 +32,8 @@ public class PremiumControllerFragment extends Fragment {
   
   // UI Components
   private View voiceInputIcon;
-  private View statusIndicator;
+  private android.widget.ImageView statusIndicator;
+  private TextView statusLabel;
   private SpeechRecognizer speechRecognizer;
   private boolean isListening = false;
   
@@ -87,6 +88,7 @@ public class PremiumControllerFragment extends Fragment {
   private void initializeViews(View view) {
     voiceInputIcon = view.findViewById(R.id.voiceInputIcon);
     statusIndicator = view.findViewById(R.id.statusIndicator);
+    statusLabel = view.findViewById(R.id.statusLabel);
   }
   
   private void checkPermissions() {
@@ -99,12 +101,13 @@ public class PremiumControllerFragment extends Fragment {
   }
   
   private void updateConnectionStatus() {
-    if (ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
-      // Connected - Green indicator
-      statusIndicator.setBackgroundResource(R.drawable.indicator_connected);
+    boolean connected = ManualCommissioningHelper.hasCommissionedVideoPlayer();
+    if (connected) {
+      statusIndicator.setImageResource(R.drawable.indicator_connected);
+      if (statusLabel != null) statusLabel.setText("Connected");
     } else {
-      // Disconnected - Red indicator
-      statusIndicator.setBackgroundResource(R.drawable.indicator_disconnected);
+      statusIndicator.setImageResource(R.drawable.indicator_disconnected);
+      if (statusLabel != null) statusLabel.setText("Disconnected");
     }
   }
   
