@@ -45,6 +45,8 @@ public class PremiumControllerFragment extends Fragment {
   private static final int KEY_RIGHT = 4;
   private static final int KEY_ROOT_MENU = 9;
   private static final int KEY_EXIT = 13;
+  private static final int KEY_VOLUME_UP = 65;
+  private static final int KEY_VOLUME_DOWN = 66;
   private static final int KEY_NUMBER_0 = 32;
   private static final int KEY_NUMBER_1 = 33;
   private static final int KEY_NUMBER_2 = 34;
@@ -244,6 +246,12 @@ public class PremiumControllerFragment extends Fragment {
     } else if (lowerCommand.contains("back") || lowerCommand.contains("exit")) {
       sendKey(KEY_EXIT, "Back");
     }
+    // Volume commands
+    else if (lowerCommand.contains("volume up") || lowerCommand.contains("louder")) {
+      sendKey(KEY_VOLUME_UP, "Volume Up");
+    } else if (lowerCommand.contains("volume down") || lowerCommand.contains("quieter")) {
+      sendKey(KEY_VOLUME_DOWN, "Volume Down");
+    }
     // Number commands
     else if (lowerCommand.matches(".*\\b(zero|0)\\b.*")) {
       sendKey(KEY_NUMBER_0, "0");
@@ -278,6 +286,8 @@ public class PremiumControllerFragment extends Fragment {
     view.findViewById(R.id.okButton).setOnClickListener(v -> sendKey(KEY_SELECT, "OK"));
     view.findViewById(R.id.homeButton).setOnClickListener(v -> sendKey(KEY_ROOT_MENU, "Home"));
     view.findViewById(R.id.backButton).setOnClickListener(v -> sendKey(KEY_EXIT, "Back"));
+    view.findViewById(R.id.volumeUpButton).setOnClickListener(v -> sendKey(KEY_VOLUME_UP, "Volume Up"));
+    view.findViewById(R.id.volumeDownButton).setOnClickListener(v -> sendKey(KEY_VOLUME_DOWN, "Volume Down"));
   }
   
   // ========== APP LAUNCHERS ==========

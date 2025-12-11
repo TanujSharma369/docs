@@ -84,7 +84,7 @@ public class AppLauncherFragment extends Fragment {
     
     // Netflix Launch Button
     launchNetflixButton.setOnClickListener(v -> {
-      launchApplication(0, "Netflix");
+      launchApplication(0, "NetflixApp");
     });
     
     // Netflix Stop Button
@@ -102,11 +102,11 @@ public class AppLauncherFragment extends Fragment {
       
       getActivity().runOnUiThread(() -> {
         if (success) {
-          statusText.setText("✓ Launch command sent for: " + applicationId);
+          statusText.setText(" Launch command sent for: " + applicationId);
           statusText.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
           Toast.makeText(getContext(), "Application launch command sent", Toast.LENGTH_SHORT).show();
         } else {
-          statusText.setText("✗ Failed to launch: " + applicationId);
+          statusText.setText(" Failed to launch: " + applicationId);
           statusText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
           Toast.makeText(getContext(), "Failed to send launch command", Toast.LENGTH_LONG).show();
         }
@@ -123,11 +123,11 @@ public class AppLauncherFragment extends Fragment {
       
       getActivity().runOnUiThread(() -> {
         if (success) {
-          statusText.setText("✓ Stop command sent for: " + applicationId);
+          statusText.setText(" Stop command sent for: " + applicationId);
           statusText.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
           Toast.makeText(getContext(), "Application stop command sent", Toast.LENGTH_SHORT).show();
         } else {
-          statusText.setText("✗ Failed to stop: " + applicationId);
+          statusText.setText(" Failed to stop: " + applicationId);
           statusText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
           Toast.makeText(getContext(), "Failed to send stop command", Toast.LENGTH_LONG).show();
         }
