@@ -112,7 +112,7 @@ public class PreferencesConfigurationManager implements ConfigurationManager {
          * src/include/platform/CHIPDeviceConfig.h for debug
          */
       case kConfigNamespace_ChipFactory + ":" + kConfigKey_ProductName:
-        return "TEST_ANDROID_PRODUCT";
+        return "TV-CASTING";
 
         /**
          * Human readable string identifying version of the product assigned by the device vendor.

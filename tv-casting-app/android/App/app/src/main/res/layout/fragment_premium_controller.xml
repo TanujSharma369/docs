@@ -128,178 +128,221 @@
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp">
             
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:padding="20dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
                 
-                <!-- Center OK Button - Larger -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/okButton"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_centerInParent="true"
-                    app:cardBackgroundColor="#007AFF"
-                    app:cardCornerRadius="40dp"
-                    app:cardElevation="6dp"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true">
+                <!-- D-Pad Navigation -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="16dp">
                     
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="OK"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:gravity="center"/>
-                </androidx.cardview.widget.CardView>
+                    <!-- Center OK Button -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/okButton"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_centerInParent="true"
+                        app:cardBackgroundColor="#007AFF"
+                        app:cardCornerRadius="35dp"
+                        app:cardElevation="6dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+                        
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="OK"
+                            android:textColor="#FFFFFF"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:gravity="center"/>
+                    </androidx.cardview.widget.CardView>
+                    
+                    <!-- Up Button -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/navUp"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_above="@id/okButton"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="12dp"
+                        app:cardBackgroundColor="#3A3A3C"
+                        app:cardCornerRadius="28dp"
+                        app:cardElevation="4dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+                        
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_nav_up"
+                            android:tint="#FFFFFF"
+                            android:padding="14dp"
+                            android:contentDescription="Up"/>
+                    </androidx.cardview.widget.CardView>
+                    
+                    <!-- Down Button -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/navDown"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_below="@id/okButton"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="12dp"
+                        app:cardBackgroundColor="#3A3A3C"
+                        app:cardCornerRadius="28dp"
+                        app:cardElevation="4dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+                        
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_nav_down"
+                            android:tint="#FFFFFF"
+                            android:padding="14dp"
+                            android:contentDescription="Down"/>
+                    </androidx.cardview.widget.CardView>
+                    
+                    <!-- Left Button -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/navLeft"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_toStartOf="@id/okButton"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="12dp"
+                        app:cardBackgroundColor="#3A3A3C"
+                        app:cardCornerRadius="28dp"
+                        app:cardElevation="4dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+                        
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_nav_left"
+                            android:tint="#FFFFFF"
+                            android:padding="14dp"
+                            android:contentDescription="Left"/>
+                    </androidx.cardview.widget.CardView>
+                    
+                    <!-- Right Button -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/navRight"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_toEndOf="@id/okButton"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="12dp"
+                        app:cardBackgroundColor="#3A3A3C"
+                        app:cardCornerRadius="28dp"
+                        app:cardElevation="4dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+                        
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_nav_right"
+                            android:tint="#FFFFFF"
+                            android:padding="14dp"
+                            android:contentDescription="Right"/>
+                    </androidx.cardview.widget.CardView>
+                </RelativeLayout>
                 
-                <!-- Up Button -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/navUp"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_above="@id/okButton"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="8dp"
-                    app:cardBackgroundColor="#3A3A3C"
-                    app:cardCornerRadius="32dp"
-                    app:cardElevation="4dp"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true">
+                <!-- Home and Back buttons in separate row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:paddingTop="8dp">
                     
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_nav_up"
-                        android:tint="#FFFFFF"
-                        android:padding="16dp"
-                        android:contentDescription="Up"/>
-                </androidx.cardview.widget.CardView>
-                
-                <!-- Down Button -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/navDown"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_below="@id/okButton"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#3A3A3C"
-                    app:cardCornerRadius="32dp"
-                    app:cardElevation="4dp"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true">
+                    <!-- Home Button -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/homeButton"
+                        android:layout_width="72dp"
+                        android:layout_height="56dp"
+                        android:layout_marginEnd="16dp"
+                        app:cardBackgroundColor="#3A3A3C"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="4dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_home"
+                                android:tint="#FFFFFF"
+                                android:padding="4dp"
+                                android:contentDescription="Home"/>
+                            
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Home"
+                                android:textColor="#FFFFFF"
+                                android:textSize="10sp"
+                                android:layout_marginTop="2dp"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
                     
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_nav_down"
-                        android:tint="#FFFFFF"
-                        android:padding="16dp"
-                        android:contentDescription="Down"/>
-                </androidx.cardview.widget.CardView>
-                
-                <!-- Left Button -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/navLeft"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_toStartOf="@id/okButton"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="8dp"
-                    app:cardBackgroundColor="#3A3A3C"
-                    app:cardCornerRadius="32dp"
-                    app:cardElevation="4dp"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true">
-                    
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_nav_left"
-                        android:tint="#FFFFFF"
-                        android:padding="16dp"
-                        android:contentDescription="Left"/>
-                </androidx.cardview.widget.CardView>
-                
-                <!-- Right Button -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/navRight"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_toEndOf="@id/okButton"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="8dp"
-                    app:cardBackgroundColor="#3A3A3C"
-                    app:cardCornerRadius="32dp"
-                    app:cardElevation="4dp"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true">
-                    
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_nav_right"
-                        android:tint="#FFFFFF"
-                        android:padding="16dp"
-                        android:contentDescription="Right"/>
-                </androidx.cardview.widget.CardView>
-                
-                <!-- Home Button -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/homeButton"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_toStartOf="@id/okButton"
-                    android:layout_marginEnd="12dp"
-                    app:cardBackgroundColor="#3A3A3C"
-                    app:cardCornerRadius="28dp"
-                    app:cardElevation="4dp"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true">
-                    
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_home"
-                        android:tint="#FFFFFF"
-                        android:padding="14dp"
-                        android:contentDescription="Home"/>
-                </androidx.cardview.widget.CardView>
-                
-                <!-- Back Button -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/backButton"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_toEndOf="@id/okButton"
-                    android:layout_marginStart="12dp"
-                    app:cardBackgroundColor="#3A3A3C"
-                    app:cardCornerRadius="28dp"
-                    app:cardElevation="4dp"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true">
-                    
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_back"
-                        android:tint="#FFFFFF"
-                        android:padding="14dp"
-                        android:contentDescription="Back"/>
-                </androidx.cardview.widget.CardView>
-            </RelativeLayout>
+                    <!-- Back Button -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/backButton"
+                        android:layout_width="72dp"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="16dp"
+                        app:cardBackgroundColor="#3A3A3C"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="4dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_back"
+                                android:tint="#FFFFFF"
+                                android:padding="4dp"
+                                android:contentDescription="Back"/>
+                            
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Back"
+                                android:textColor="#FFFFFF"
+                                android:textSize="10sp"
+                                android:layout_marginTop="2dp"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!-- Keypad -->
