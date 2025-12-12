@@ -195,4 +195,28 @@ public class MainActivity extends AppCompatActivity
   private void showFragment(Fragment fragment) {
     showFragment(fragment, true);
   }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    Log.i(TAG, "MainActivity.onResume() - Matter stack should remain active");
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    Log.i(TAG, "MainActivity.onPause() - keeping Matter stack alive in background");
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    Log.w(TAG, "MainActivity.onStop() - app backgrounded, Matter subscriptions may break");
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    Log.e(TAG, "MainActivity.onDestroy() - app is being destroyed, commissioner will lose connection");
+  }
 }

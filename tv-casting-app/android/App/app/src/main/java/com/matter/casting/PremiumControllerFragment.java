@@ -34,6 +34,8 @@ public class PremiumControllerFragment extends Fragment {
   private View voiceInputIcon;
   private android.widget.ImageView statusIndicator;
   private TextView statusLabel;
+  private View pairButton;
+  private android.app.AlertDialog commissioningDialog;
   private SpeechRecognizer speechRecognizer;
   private boolean isListening = false;
   
@@ -86,11 +88,30 @@ public class PremiumControllerFragment extends Fragment {
     // Start monitoring connection status
     startConnectionMonitoring();
   }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    // Start foreground service to keep Matter stack alive in background
+    if (ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
+      Intent serviceIntent = new Intent(getContext(), MatterKeepAliveService.class);
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        getContext().startForegroundService(serviceIntent);
+      } else {
+        getContext().startService(serviceIntent);
+      }
+      Log.i(TAG, "Started MatterKeepAliveService to maintain connection");
+    }
+  }
   
   private void initializeViews(View view) {
     voiceInputIcon = view.findViewById(R.id.voiceInputIcon);
     statusIndicator = view.findViewById(R.id.statusIndicator);
     statusLabel = view.findViewById(R.id.statusLabel);
+    pairButton = view.findViewById(R.id.pairButton);
+    
+    // Setup pair button click
+    pairButton.setOnClickListener(v -> showCommissioningDialog());
   }
   
   private void checkPermissions() {
@@ -120,9 +141,55 @@ public class PremiumControllerFragment extends Fragment {
       @Override
       public void run() {
         updateConnectionStatus();
+        // Auto-close commissioning dialog if connection established
+        if (commissioningDialog != null && commissioningDialog.isShowing() 
+            && ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
+          commissioningDialog.dismiss();
+          Toast.makeText(getContext(), "Device paired successfully!", Toast.LENGTH_SHORT).show();
+        }
         handler.postDelayed(this, 2000);
       }
     }, 2000);
+  }
+
+  private void showCommissioningDialog() {
+    View dialogView = getLayoutInflater().inflate(R.layout.dialog_commissioning_code, null);
+    TextView codeText = dialogView.findViewById(R.id.commissioningCodeText);
+    TextView statusText = dialogView.findViewById(R.id.commissioningStatusText);
+    
+    // Create and show dialog
+    commissioningDialog = new android.app.AlertDialog.Builder(getContext())
+        .setView(dialogView)
+        .setCancelable(true)
+        .create();
+    
+    if (commissioningDialog.getWindow() != null) {
+      commissioningDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    }
+    
+    commissioningDialog.show();
+    
+    // Open commissioning window in background thread
+    new Thread(() -> {
+      Log.i(TAG, "Opening commissioning window for pairing");
+      com.matter.casting.support.MatterError err = 
+          ManualCommissioningHelper.openBasicCommissioningWindowWithTimeout(600);
+      
+      getActivity().runOnUiThread(() -> {
+        if (err.hasNoError()) {
+          Log.i(TAG, "Commissioning window opened successfully");
+          // Get and display the pairing code
+          ManualCommissioningHelper.logOnboardingPayload();
+          // TODO: Get actual code from helper if available
+          codeText.setText("20202021"); // Placeholder - use actual code
+          statusText.setText("Waiting for TV to connect...");
+        } else {
+          Log.e(TAG, "Failed to open commissioning window: " + err.getErrorMessage());
+          statusText.setText("Error: " + err.getErrorMessage());
+          statusText.setTextColor(0xFFFF3B30);
+        }
+      });
+    }).start();
   }
   
   // ========== VOICE INPUT ==========
@@ -337,6 +404,17 @@ public class PremiumControllerFragment extends Fragment {
     super.onDestroy();
     if (speechRecognizer != null) {
       speechRecognizer.destroy();
+    }
+    if (commissioningDialog != null && commissioningDialog.isShowing()) {
+      commissioningDialog.dismiss();
+    }
+    // Stop foreground service if fragment is destroyed
+    try {
+      Intent serviceIntent = new Intent(getContext(), MatterKeepAliveService.class);
+      getContext().stopService(serviceIntent);
+      Log.i(TAG, "Stopped MatterKeepAliveService");
+    } catch (Exception e) {
+      Log.e(TAG, "Error stopping service: " + e.getMessage());
     }
   }
   

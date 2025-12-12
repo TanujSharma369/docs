@@ -50,6 +50,29 @@
                 android:padding="6dp"
                 android:background="@drawable/bg_voice_input"
                 android:contentDescription="Voice Control"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/pairButton"
+                android:layout_width="60dp"
+                android:layout_height="28dp"
+                android:layout_toStartOf="@id/voiceInputIcon"
+                android:layout_marginEnd="8dp"
+                android:layout_centerVertical="true"
+                app:cardBackgroundColor="#0A84FF"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Pair"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+            </androidx.cardview.widget.CardView>
         </RelativeLayout>
 
         <!-- Quick Launch Apps -->
