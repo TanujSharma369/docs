@@ -89,6 +89,9 @@ public class PremiumControllerFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     
+    // Enable edge-to-edge immersive mode
+    enableImmersiveMode();
+    
     // Initialize haptic feedback and animations
     vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
     pressAnim = AnimationUtils.loadAnimation(getContext(), R.anim.button_press);
@@ -105,6 +108,19 @@ public class PremiumControllerFragment extends Fragment {
     
     // Start monitoring connection status
     startConnectionMonitoring();
+  }
+  
+  private void enableImmersiveMode() {
+    if (getActivity() != null && getActivity().getWindow() != null) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        getActivity().getWindow().setDecorFitsSystemWindows(false);
+      } else {
+        getActivity().getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+      }
+      getActivity().getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+    }
   }
 
   @Override
