@@ -180,8 +180,7 @@ public class PremiumControllerFragment extends Fragment {
           Log.i(TAG, "Commissioning window opened successfully");
           // Get and display the pairing code
           ManualCommissioningHelper.logOnboardingPayload();
-          // TODO: Get actual code from helper if available
-          codeText.setText("20202021"); // Placeholder - use actual code
+          codeText.setText("MT:-24J0AFN00YZ.548G00");
           statusText.setText("Waiting for TV to connect...");
         } else {
           Log.e(TAG, "Failed to open commissioning window: " + err.getErrorMessage());
