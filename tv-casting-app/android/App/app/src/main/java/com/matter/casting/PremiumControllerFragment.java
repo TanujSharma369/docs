@@ -1,9 +1,13 @@
 package com.matter.casting;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -11,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -38,6 +44,12 @@ public class PremiumControllerFragment extends Fragment {
   private android.app.AlertDialog commissioningDialog;
   private SpeechRecognizer speechRecognizer;
   private boolean isListening = false;
+  
+  // Haptic feedback
+  private Vibrator vibrator;
+  private Animation pressAnim;
+  private Animation releaseAnim;
+  private Animation glowAnim;
   
   // CEC Key Codes
   private static final int KEY_SELECT = 0;
@@ -77,6 +89,12 @@ public class PremiumControllerFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     
+    // Initialize haptic feedback and animations
+    vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+    pressAnim = AnimationUtils.loadAnimation(getContext(), R.anim.button_press);
+    releaseAnim = AnimationUtils.loadAnimation(getContext(), R.anim.button_release);
+    glowAnim = AnimationUtils.loadAnimation(getContext(), R.anim.glow_pulse);
+    
     initializeViews(view);
     checkPermissions();
     updateConnectionStatus();
@@ -110,8 +128,36 @@ public class PremiumControllerFragment extends Fragment {
     statusLabel = view.findViewById(R.id.statusLabel);
     pairButton = view.findViewById(R.id.pairButton);
     
-    // Setup pair button click
-    pairButton.setOnClickListener(v -> showCommissioningDialog());
+    // Setup pair button click with haptics
+    pairButton.setOnClickListener(v -> {
+      hapticFeedback(v, true);
+      showCommissioningDialog();
+    });
+  }
+  
+  /**
+   * Provide haptic feedback and animation for button press
+   * @param view The button being pressed
+   * @param isPrimary True for primary buttons (OK, Pair) to add glow effect
+   */
+  private void hapticFeedback(View view, boolean isPrimary) {
+    // Vibrate
+    if (vibrator != null && vibrator.hasVibrator()) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        vibrator.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE));
+      } else {
+        vibrator.vibrate(20);
+      }
+    }
+    
+    // Scale animation
+    view.startAnimation(pressAnim);
+    view.postDelayed(() -> view.startAnimation(releaseAnim), 100);
+    
+    // Glow effect for primary buttons
+    if (isPrimary) {
+      view.startAnimation(glowAnim);
+    }
   }
   
   private void checkPermissions() {
@@ -345,22 +391,22 @@ public class PremiumControllerFragment extends Fragment {
   // ========== NAVIGATION CONTROLS ==========
   
   private void setupNavigationControls(View view) {
-    view.findViewById(R.id.navUp).setOnClickListener(v -> sendKey(KEY_UP, "Up"));
-    view.findViewById(R.id.navDown).setOnClickListener(v -> sendKey(KEY_DOWN, "Down"));
-    view.findViewById(R.id.navLeft).setOnClickListener(v -> sendKey(KEY_LEFT, "Left"));
-    view.findViewById(R.id.navRight).setOnClickListener(v -> sendKey(KEY_RIGHT, "Right"));
-    view.findViewById(R.id.okButton).setOnClickListener(v -> sendKey(KEY_SELECT, "OK"));
-    view.findViewById(R.id.homeButton).setOnClickListener(v -> sendKey(KEY_ROOT_MENU, "Home"));
-    view.findViewById(R.id.backButton).setOnClickListener(v -> sendKey(KEY_EXIT, "Back"));
-    view.findViewById(R.id.volumeUpButton).setOnClickListener(v -> sendKey(KEY_VOLUME_UP, "Volume Up"));
-    view.findViewById(R.id.volumeDownButton).setOnClickListener(v -> sendKey(KEY_VOLUME_DOWN, "Volume Down"));
+    view.findViewById(R.id.navUp).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_UP, "Up"); });
+    view.findViewById(R.id.navDown).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_DOWN, "Down"); });
+    view.findViewById(R.id.navLeft).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_LEFT, "Left"); });
+    view.findViewById(R.id.navRight).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_RIGHT, "Right"); });
+    view.findViewById(R.id.okButton).setOnClickListener(v -> { hapticFeedback(v, true); sendKey(KEY_SELECT, "OK"); });
+    view.findViewById(R.id.homeButton).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_ROOT_MENU, "Home"); });
+    view.findViewById(R.id.backButton).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_EXIT, "Back"); });
+    view.findViewById(R.id.volumeUpButton).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_VOLUME_UP, "Volume Up"); });
+    view.findViewById(R.id.volumeDownButton).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_VOLUME_DOWN, "Volume Down"); });
   }
   
   // ========== APP LAUNCHERS ==========
   
   private void setupAppLaunchers(View view) {
-    view.findViewById(R.id.youtubeCard).setOnClickListener(v -> launchApp("YouTube"));
-    view.findViewById(R.id.netflixCard).setOnClickListener(v -> launchApp("Netflix"));
+    view.findViewById(R.id.youtubeCard).setOnClickListener(v -> { hapticFeedback(v, false); launchApp("YouTube"); });
+    view.findViewById(R.id.netflixCard).setOnClickListener(v -> { hapticFeedback(v, false); launchApp("Netflix"); });
   }
   
   private void launchApp(String appName) {
@@ -377,16 +423,16 @@ public class PremiumControllerFragment extends Fragment {
   // ========== KEYPAD ==========
   
   private void setupKeypad(View view) {
-    view.findViewById(R.id.key0).setOnClickListener(v -> sendKey(KEY_NUMBER_0, "0"));
-    view.findViewById(R.id.key1).setOnClickListener(v -> sendKey(KEY_NUMBER_1, "1"));
-    view.findViewById(R.id.key2).setOnClickListener(v -> sendKey(KEY_NUMBER_2, "2"));
-    view.findViewById(R.id.key3).setOnClickListener(v -> sendKey(KEY_NUMBER_3, "3"));
-    view.findViewById(R.id.key4).setOnClickListener(v -> sendKey(KEY_NUMBER_4, "4"));
-    view.findViewById(R.id.key5).setOnClickListener(v -> sendKey(KEY_NUMBER_5, "5"));
-    view.findViewById(R.id.key6).setOnClickListener(v -> sendKey(KEY_NUMBER_6, "6"));
-    view.findViewById(R.id.key7).setOnClickListener(v -> sendKey(KEY_NUMBER_7, "7"));
-    view.findViewById(R.id.key8).setOnClickListener(v -> sendKey(KEY_NUMBER_8, "8"));
-    view.findViewById(R.id.key9).setOnClickListener(v -> sendKey(KEY_NUMBER_9, "9"));
+    view.findViewById(R.id.key0).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_NUMBER_0, "0"); });
+    view.findViewById(R.id.key1).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_NUMBER_1, "1"); });
+    view.findViewById(R.id.key2).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_NUMBER_2, "2"); });
+    view.findViewById(R.id.key3).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_NUMBER_3, "3"); });
+    view.findViewById(R.id.key4).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_NUMBER_4, "4"); });
+    view.findViewById(R.id.key5).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_NUMBER_5, "5"); });
+    view.findViewById(R.id.key6).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_NUMBER_6, "6"); });
+    view.findViewById(R.id.key7).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_NUMBER_7, "7"); });
+    view.findViewById(R.id.key8).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_NUMBER_8, "8"); });
+    view.findViewById(R.id.key9).setOnClickListener(v -> { hapticFeedback(v, false); sendKey(KEY_NUMBER_9, "9"); });
   }
   
   private void sendKey(int keyCode, String keyName) {
