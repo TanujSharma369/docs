@@ -112,14 +112,16 @@ public class PremiumControllerFragment extends Fragment {
   
   private void enableImmersiveMode() {
     if (getActivity() != null && getActivity().getWindow() != null) {
+      // Revert to matte-black status bar to preserve the premium matte theme.
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        getActivity().getWindow().setDecorFitsSystemWindows(false);
+        // Let the window fit system windows so content doesn't draw under status bar
+        getActivity().getWindow().setDecorFitsSystemWindows(true);
       } else {
-        getActivity().getWindow().getDecorView().setSystemUiVisibility(
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        // Clear fullscreen/layout flags for older devices
+        getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
       }
-      getActivity().getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+      // Use a deep matte black for the status bar
+      getActivity().getWindow().setStatusBarColor(android.graphics.Color.parseColor("#0B0B0B"));
     }
   }
 
