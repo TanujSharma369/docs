@@ -116,17 +116,20 @@ public class PremiumControllerFragment extends Fragment {
   @Override
   public void onStart() {
     super.onStart();
-    Log.i(TAG, "onStart() - attempting reconnection and starting status polling");
+    Log.i(TAG, "onStart() - attempting reconnection");
     
     // Explicitly trigger reconnection to last player if one exists in cache
-    new Thread(() -> {
+    // Do this synchronously before polling to ensure it completes
+    try {
       com.matter.casting.support.MatterError err = ManualCommissioningHelper.attemptReconnectToLastPlayer();
       if (err.hasError()) {
-        Log.i(TAG, "No cached player to reconnect to or reconnection failed: " + err.getErrorMessage());
+        Log.w(TAG, "No cached player to reconnect to: " + err.getErrorMessage());
       } else {
         Log.i(TAG, "Reconnection attempt initiated successfully");
       }
-    }).start();
+    } catch (Exception e) {
+      Log.e(TAG, "Exception during reconnection attempt", e);
+    }
     
     // Poll for connection status
     handler.postDelayed(
@@ -157,7 +160,7 @@ public class PremiumControllerFragment extends Fragment {
             }
           }
         },
-        1000); // Wait 1 second before starting to poll
+        500); // Wait 500ms before starting to poll
   }
 
   @Override
