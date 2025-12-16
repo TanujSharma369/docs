@@ -110,6 +110,22 @@ public class PremiumControllerFragment extends Fragment {
   @Override
   public void onResume() {
     super.onResume();
+    
+    // Trigger auto-reconnect to previously commissioned CastingPlayer
+    // CastingApp.start() will check if there's a cached player and reconnect automatically
+    new Thread(() -> {
+      Log.i(TAG, "Calling CastingApp.start() to trigger auto-reconnect");
+      com.matter.casting.support.MatterError err = com.matter.casting.core.CastingApp.getInstance().start();
+      if (err.hasError()) {
+        Log.e(TAG, "CastingApp.start() failed: " + err.getErrorMessage());
+      } else {
+        Log.i(TAG, "CastingApp.start() succeeded - auto-reconnect initiated if cached player exists");
+        getActivity().runOnUiThread(() -> {
+          updateConnectionStatus();
+        });
+      }
+    }).start();
+    
     // Start foreground service to keep Matter stack alive in background
     if (ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
       Intent serviceIntent = new Intent(getContext(), MatterKeepAliveService.class);
