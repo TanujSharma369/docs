@@ -112,6 +112,12 @@ public class PremiumControllerFragment extends Fragment {
   public void onResume() {
     super.onResume();
     
+    // Only proceed if views are initialized
+    if (statusIndicator == null || statusLabel == null) {
+      Log.w(TAG, "onResume() called before views initialized, skipping reconnect logic");
+      return;
+    }
+    
     // Trigger auto-reconnect to previously commissioned CastingPlayer
     // CastingApp.start() will check if there's a cached player and reconnect automatically
     new Thread(() -> {
@@ -185,14 +191,20 @@ public class PremiumControllerFragment extends Fragment {
   }
   
   private void updateConnectionStatus() {
+    // Guard against null views
+    if (statusIndicator == null || statusLabel == null) {
+      Log.w(TAG, "updateConnectionStatus() called but views not initialized yet");
+      return;
+    }
+    
     boolean connected = isConnectedToCastingPlayer();
     if (connected) {
       statusIndicator.setImageResource(R.drawable.indicator_connected);
-      if (statusLabel != null) statusLabel.setText("Connected");
+      statusLabel.setText("Connected");
       Log.i(TAG, "UI updated: Connected to CastingPlayer");
     } else {
       statusIndicator.setImageResource(R.drawable.indicator_disconnected);
-      if (statusLabel != null) statusLabel.setText("Disconnected");
+      statusLabel.setText("Disconnected");
       Log.i(TAG, "UI updated: Disconnected from CastingPlayer");
     }
   }
