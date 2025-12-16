@@ -45,8 +45,12 @@ public class PremiumControllerFragment extends Fragment {
   private TextView statusLabel;
   private View pairButton;
   private android.app.AlertDialog commissioningDialog;
+  private android.app.AlertDialog voiceSessionDialog;
   private SpeechRecognizer speechRecognizer;
   private boolean isListening = false;
+  private boolean isVoiceSessionActive = false;
+  private TextView voiceCommandText;
+  private TextView voiceStatusText;
   
   // Haptic feedback
   private Vibrator vibrator;
@@ -380,7 +384,17 @@ public class PremiumControllerFragment extends Fragment {
       @Override
       public void onError(int error) {
         isListening = false;
-        voiceInputIcon.setAlpha(0.7f);
+        
+        // Auto-restart on certain errors if voice session is active
+        if (isVoiceSessionActive && (error == SpeechRecognizer.ERROR_NO_MATCH || error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT)) {
+          new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+            if (isVoiceSessionActive) {
+              startListening();
+            }
+          }, 500);
+        } else {
+          voiceInputIcon.setAlpha(0.7f);
+        }
       }
       
       @Override
@@ -388,11 +402,31 @@ public class PremiumControllerFragment extends Fragment {
         ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         if (matches != null && !matches.isEmpty()) {
           String command = matches.get(0);
+          
+          // Update dialog UI
+          if (voiceCommandText != null) {
+            voiceCommandText.setText("\"" + command + "\"");
+          }
+          
           processVoiceCommand(command);
+          
+          // Auto-restart listening if voice session is still active
+          if (isVoiceSessionActive) {
+            // Small delay before restarting to show the command briefly
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+              if (isVoiceSessionActive) {
+                if (voiceStatusText != null) {
+                  voiceStatusText.setText("🎤 Listening...");
+                }
+                if (voiceCommandText != null) {
+                  voiceCommandText.setText("Say next command...");
+                }
+                startListening();
+              }
+            }, 800);
+          }
         }
         isListening = false;
-        voiceInputIcon.setAlpha(0.7f);
-        updateConnectionStatus();
       }
       
       @Override
@@ -412,10 +446,72 @@ public class PremiumControllerFragment extends Fragment {
       return;
     }
     
-    if (isListening) {
-      stopListening();
+    if (isVoiceSessionActive) {
+      stopVoiceSession();
     } else {
-      startListening();
+      startVoiceSession();
+    }
+  }
+  
+  private void startVoiceSession() {
+    // Create voice session dialog
+    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(requireContext());
+    View dialogView = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, null);
+    
+    // Create custom view for voice session
+    android.widget.LinearLayout dialogLayout = new android.widget.LinearLayout(requireContext());
+    dialogLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
+    dialogLayout.setPadding(60, 60, 60, 60);
+    dialogLayout.setGravity(android.view.Gravity.CENTER);
+    
+    // Status text
+    voiceStatusText = new TextView(requireContext());
+    voiceStatusText.setText("🎤 Listening...");
+    voiceStatusText.setTextSize(24);
+    voiceStatusText.setTextColor(0xFF0A84FF);
+    voiceStatusText.setGravity(android.view.Gravity.CENTER);
+    voiceStatusText.setPadding(0, 0, 0, 30);
+    dialogLayout.addView(voiceStatusText);
+    
+    // Command text
+    voiceCommandText = new TextView(requireContext());
+    voiceCommandText.setText("Say a command...");
+    voiceCommandText.setTextSize(16);
+    voiceCommandText.setTextColor(0xFFFFFFFF);
+    voiceCommandText.setGravity(android.view.Gravity.CENTER);
+    voiceCommandText.setMinHeight(100);
+    dialogLayout.addView(voiceCommandText);
+    
+    // Close button
+    android.widget.Button closeButton = new android.widget.Button(requireContext());
+    closeButton.setText("Stop Listening");
+    closeButton.setOnClickListener(v -> stopVoiceSession());
+    android.widget.LinearLayout.LayoutParams buttonParams = new android.widget.LinearLayout.LayoutParams(
+        android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+        android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+    );
+    buttonParams.topMargin = 40;
+    closeButton.setLayoutParams(buttonParams);
+    dialogLayout.addView(closeButton);
+    
+    builder.setView(dialogLayout);
+    builder.setCancelable(true);
+    builder.setOnCancelListener(dialog -> stopVoiceSession());
+    
+    voiceSessionDialog = builder.create();
+    voiceSessionDialog.getWindow().setBackgroundDrawableResource(android.R.drawable.dialog_holo_dark_frame);
+    voiceSessionDialog.show();
+    
+    isVoiceSessionActive = true;
+    startListening();
+  }
+  
+  private void stopVoiceSession() {
+    isVoiceSessionActive = false;
+    stopListening();
+    if (voiceSessionDialog != null && voiceSessionDialog.isShowing()) {
+      voiceSessionDialog.dismiss();
+      voiceSessionDialog = null;
     }
   }
   
@@ -553,6 +649,7 @@ public class PremiumControllerFragment extends Fragment {
   @Override
   public void onDestroy() {
     super.onDestroy();
+    stopVoiceSession();
     if (speechRecognizer != null) {
       speechRecognizer.destroy();
     }
