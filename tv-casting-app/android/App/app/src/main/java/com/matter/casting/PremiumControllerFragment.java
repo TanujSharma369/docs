@@ -571,7 +571,7 @@ public class PremiumControllerFragment extends Fragment {
     stopButtonText.setText("Stop Listening");
     stopButtonText.setTextSize(14);
     stopButtonText.setTextColor(0xFFFFFFFF);
-    stopButtonText.setTextStyle(android.graphics.Typeface.BOLD);
+    stopButtonText.setTypeface(null, android.graphics.Typeface.BOLD);
     stopButtonText.setPadding(40, 20, 40, 20);
     stopButtonText.setGravity(android.view.Gravity.CENTER);
     stopButtonCard.addView(stopButtonText);
