@@ -120,14 +120,12 @@ public class PremiumControllerFragment extends Fragment {
         Log.e(TAG, "CastingApp.start() failed: " + err.getErrorMessage());
       } else {
         Log.i(TAG, "CastingApp.start() succeeded - auto-reconnect initiated if cached player exists");
-        getActivity().runOnUiThread(() -> {
-          updateConnectionStatus();
-        });
+        // Don't update UI immediately - let the connection monitoring detect the actual state
       }
     }).start();
     
-    // Start foreground service to keep Matter stack alive in background
-    if (ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
+    // Start foreground service to keep Matter stack alive in background if connected
+    if (isConnectedToCastingPlayer()) {
       Intent serviceIntent = new Intent(getContext(), MatterKeepAliveService.class);
       if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
         getContext().startForegroundService(serviceIntent);
@@ -186,14 +184,33 @@ public class PremiumControllerFragment extends Fragment {
   }
   
   private void updateConnectionStatus() {
-    boolean connected = ManualCommissioningHelper.hasCommissionedVideoPlayer();
+    boolean connected = isConnectedToCastingPlayer();
     if (connected) {
       statusIndicator.setImageResource(R.drawable.indicator_connected);
       if (statusLabel != null) statusLabel.setText("Connected");
+      Log.i(TAG, "UI updated: Connected to CastingPlayer");
     } else {
       statusIndicator.setImageResource(R.drawable.indicator_disconnected);
       if (statusLabel != null) statusLabel.setText("Disconnected");
+      Log.i(TAG, "UI updated: Disconnected from CastingPlayer");
     }
+  }
+  
+  private boolean isConnectedToCastingPlayer() {
+    try {
+      List<com.matter.casting.core.CastingPlayer> players = 
+          ManualCommissioningMonitor.getInstance().getConnectedCastingPlayers();
+      if (players != null && !players.isEmpty()) {
+        for (com.matter.casting.core.CastingPlayer player : players) {
+          if (player.getConnectionState() == com.matter.casting.core.CastingPlayer.ConnectionState.CONNECTED) {
+            return true;
+          }
+        }
+      }
+    } catch (Exception e) {
+      Log.e(TAG, "Error checking connection status", e);
+    }
+    return false;
   }
   
   private void startConnectionMonitoring() {
@@ -205,7 +222,7 @@ public class PremiumControllerFragment extends Fragment {
         updateConnectionStatus();
         // Auto-close commissioning dialog if connection established
         if (commissioningDialog != null && commissioningDialog.isShowing() 
-            && ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
+            && isConnectedToCastingPlayer()) {
           commissioningDialog.dismiss();
           Toast.makeText(getContext(), "Device paired successfully!", Toast.LENGTH_SHORT).show();
         }
