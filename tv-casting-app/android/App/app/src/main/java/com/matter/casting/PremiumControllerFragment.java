@@ -114,22 +114,13 @@ public class PremiumControllerFragment extends Fragment {
     
     // Only proceed if views are initialized
     if (statusIndicator == null || statusLabel == null) {
-      Log.w(TAG, "onResume() called before views initialized, skipping reconnect logic");
+      Log.w(TAG, "onResume() called before views initialized, skipping");
       return;
     }
     
-    // Trigger auto-reconnect to previously commissioned CastingPlayer
-    // CastingApp.start() will check if there's a cached player and reconnect automatically
-    new Thread(() -> {
-      Log.i(TAG, "Calling CastingApp.start() to trigger auto-reconnect");
-      com.matter.casting.support.MatterError err = com.matter.casting.core.CastingApp.getInstance().start();
-      if (err.hasError()) {
-        Log.e(TAG, "CastingApp.start() failed: " + err.getErrorMessage());
-      } else {
-        Log.i(TAG, "CastingApp.start() succeeded - auto-reconnect initiated if cached player exists");
-        // Don't update UI immediately - let the connection monitoring detect the actual state
-      }
-    }).start();
+    // Update UI to reflect current connection state
+    // CastingApp.start() is already called in MainActivity.onCreate() which handles auto-reconnect
+    updateConnectionStatus();
     
     // Start foreground service to keep Matter stack alive in background if connected
     if (isConnectedToCastingPlayer()) {
