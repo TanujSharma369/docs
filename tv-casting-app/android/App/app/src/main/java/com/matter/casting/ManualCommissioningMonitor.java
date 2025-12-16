@@ -123,7 +123,6 @@ public class ManualCommissioningMonitor {
     /**
      * Get list of connected CastingPlayers using native method
      * This calls into the C++ layer to retrieve commissioned players
-     * Made public so other components can check connection status
      */
-    public native List<CastingPlayer> getConnectedCastingPlayers();
+    private native List<CastingPlayer> getConnectedCastingPlayers();
 }
