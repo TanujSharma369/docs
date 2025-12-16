@@ -116,13 +116,23 @@ public class PremiumControllerFragment extends Fragment {
   @Override
   public void onStart() {
     super.onStart();
-    Log.i(TAG, "onStart() - starting connection status polling");
-    // Poll for connection status - the native layer handles auto-reconnect in CastingApp.start()
-    // which is already called in MainActivity, so we just need to wait and check
+    Log.i(TAG, "onStart() - attempting reconnection and starting status polling");
+    
+    // Explicitly trigger reconnection to last player if one exists in cache
+    new Thread(() -> {
+      com.matter.casting.support.MatterError err = ManualCommissioningHelper.attemptReconnectToLastPlayer();
+      if (err.hasError()) {
+        Log.i(TAG, "No cached player to reconnect to or reconnection failed: " + err.getErrorMessage());
+      } else {
+        Log.i(TAG, "Reconnection attempt initiated successfully");
+      }
+    }).start();
+    
+    // Poll for connection status
     handler.postDelayed(
         new Runnable() {
           private int pollCount = 0;
-          private final int MAX_POLLS = 120; // Poll for 60 seconds (increased from 15s)
+          private final int MAX_POLLS = 120; // Poll for 60 seconds
 
           @Override
           public void run() {

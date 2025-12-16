@@ -285,3 +285,40 @@ JNI_METHOD(jobject, sendLaunchURLCommand)(JNIEnv * env, jclass, jstring contentU
     
     return matter::casting::support::convertMatterErrorFromCppToJava(err);
 }
+
+JNI_METHOD(jobject, attemptReconnectToLastPlayer)(JNIEnv * env, jclass)
+{
+    chip::DeviceLayer::StackLock lock;
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::attemptReconnectToLastPlayer() called");
+    
+    // Try to get the target casting player from cache
+    matter::casting::core::CastingPlayer * targetPlayer = matter::casting::core::CastingPlayer::GetTargetCastingPlayer();
+    
+    if (targetPlayer != nullptr)
+    {
+        ChipLogProgress(AppServer, "ManualCommissioningHelper::attemptReconnectToLastPlayer() Found cached player, verifying/establishing connection");
+        
+        // VerifyOrEstablishConnection will check if we have an active session and re-establish if needed
+        targetPlayer->VerifyOrEstablishConnection(
+            [](CHIP_ERROR err) {
+                if (err == CHIP_NO_ERROR)
+                {
+                    ChipLogProgress(AppServer, "ManualCommissioningHelper: Reconnection successful!");
+                }
+                else
+                {
+                    ChipLogError(AppServer, "ManualCommissioningHelper: Reconnection failed: %" CHIP_ERROR_FORMAT, err.Format());
+                }
+            },
+            matter::casting::core::kCommissioningWindowTimeoutSec
+        );
+        
+        return matter::casting::support::convertMatterErrorFromCppToJava(CHIP_NO_ERROR);
+    }
+    else
+    {
+        ChipLogError(AppServer, "ManualCommissioningHelper::attemptReconnectToLastPlayer() No cached player found");
+        return matter::casting::support::convertMatterErrorFromCppToJava(CHIP_ERROR_INCORRECT_STATE);
+    }
+}
+

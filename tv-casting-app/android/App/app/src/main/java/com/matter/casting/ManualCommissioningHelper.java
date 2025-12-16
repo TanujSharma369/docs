@@ -96,4 +96,12 @@ public class ManualCommissioningHelper {
      * @return MatterError.NO_ERROR if successful
      */
     public static native MatterError sendLaunchURLCommand(String contentUrl, String displayString);
+    
+    /**
+     * Attempt to reconnect to the last commissioned player from cache.
+     * This will verify or re-establish the CASE session with the cached player.
+     * 
+     * @return MatterError.NO_ERROR if reconnection started successfully
+     */
+    public static native MatterError attemptReconnectToLastPlayer();
 }
