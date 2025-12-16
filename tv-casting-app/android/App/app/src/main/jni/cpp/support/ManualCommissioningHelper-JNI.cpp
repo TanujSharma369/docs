@@ -353,7 +353,7 @@ JNI_METHOD(jobject, attemptReconnectToLastPlayer)(JNIEnv * env, jclass)
         };
         
         // VerifyOrEstablishConnection will check if we have an active session and re-establish if needed
-        targetPlayer->VerifyOrEstablishConnection(callbacks, matter::casting::core::CastingPlayer::kCommissioningWindowTimeoutSec);
+        targetPlayer->VerifyOrEstablishConnection(callbacks, matter::casting::core::kCommissioningWindowTimeoutSec);
         
         return matter::casting::support::convertMatterErrorFromCppToJava(CHIP_NO_ERROR);
     }
