@@ -51,6 +51,8 @@ public class PremiumControllerFragment extends Fragment {
   private boolean isVoiceSessionActive = false;
   private TextView voiceCommandText;
   private TextView voiceStatusText;
+  private TextView commandHistoryText;
+  private View pulseAnimation;
   
   // Haptic feedback
   private Vibrator vibrator;
@@ -403,30 +405,47 @@ public class PremiumControllerFragment extends Fragment {
         if (matches != null && !matches.isEmpty()) {
           String command = matches.get(0);
           
-          // Update dialog UI
+          // Update current command display
           if (voiceCommandText != null) {
             voiceCommandText.setText("\"" + command + "\"");
+            voiceCommandText.setAlpha(1.0f);
+          }
+          
+          // Add to command history with timestamp
+          if (commandHistoryText != null) {
+            String currentHistory = commandHistoryText.getText().toString();
+            if (currentHistory.contains("Command history will appear here")) {
+              currentHistory = "";
+            }
+            String timestamp = new java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.US).format(new java.util.Date());
+            String newEntry = timestamp + " - Heard: \"" + command + "\"\n" + currentHistory;
+            commandHistoryText.setText(newEntry);
+            commandHistoryText.setTextColor(0xFFFFFFFF);
           }
           
           processVoiceCommand(command);
           
+          // Reset listening state
+          isListening = false;
+          
           // Auto-restart listening if voice session is still active
           if (isVoiceSessionActive) {
-            // Small delay before restarting to show the command briefly
             new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
-              if (isVoiceSessionActive) {
+              if (isVoiceSessionActive && !isListening) {
                 if (voiceStatusText != null) {
-                  voiceStatusText.setText("🎤 Listening...");
+                  voiceStatusText.setText("Listening...");
                 }
                 if (voiceCommandText != null) {
                   voiceCommandText.setText("Say next command...");
+                  voiceCommandText.setAlpha(0.7f);
                 }
                 startListening();
               }
-            }, 800);
+            }, 1000);
           }
+        } else {
+          isListening = false;
         }
-        isListening = false;
       }
       
       @Override
@@ -454,52 +473,118 @@ public class PremiumControllerFragment extends Fragment {
   }
   
   private void startVoiceSession() {
-    // Create voice session dialog
+    // Create premium dark-themed voice session dialog
     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(requireContext());
-    View dialogView = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, null);
     
-    // Create custom view for voice session
+    // Create custom dark layout
     android.widget.LinearLayout dialogLayout = new android.widget.LinearLayout(requireContext());
     dialogLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
-    dialogLayout.setPadding(60, 60, 60, 60);
+    dialogLayout.setPadding(50, 50, 50, 50);
+    dialogLayout.setBackgroundColor(0xFF1C1C1E);
     dialogLayout.setGravity(android.view.Gravity.CENTER);
     
-    // Status text
+    // Pulsing animation view (microphone indicator)
+    pulseAnimation = new View(requireContext());
+    android.widget.LinearLayout.LayoutParams pulseParams = new android.widget.LinearLayout.LayoutParams(80, 80);
+    pulseParams.gravity = android.view.Gravity.CENTER;
+    pulseParams.bottomMargin = 20;
+    pulseAnimation.setLayoutParams(pulseParams);
+    pulseAnimation.setBackgroundResource(android.R.drawable.ic_btn_speak_now);
+    pulseAnimation.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFF0A84FF));
+    dialogLayout.addView(pulseAnimation);
+    
+    // Start pulse animation
+    android.view.animation.ScaleAnimation scaleUp = new android.view.animation.ScaleAnimation(
+        1.0f, 1.3f, 1.0f, 1.3f,
+        android.view.animation.Animation.RELATIVE_TO_SELF, 0.5f,
+        android.view.animation.Animation.RELATIVE_TO_SELF, 0.5f
+    );
+    scaleUp.setDuration(800);
+    scaleUp.setRepeatCount(android.view.animation.Animation.INFINITE);
+    scaleUp.setRepeatMode(android.view.animation.Animation.REVERSE);
+    pulseAnimation.startAnimation(scaleUp);
+    
+    // Status text ("Listening...")
     voiceStatusText = new TextView(requireContext());
-    voiceStatusText.setText("🎤 Listening...");
-    voiceStatusText.setTextSize(24);
+    voiceStatusText.setText("Listening...");
+    voiceStatusText.setTextSize(20);
     voiceStatusText.setTextColor(0xFF0A84FF);
     voiceStatusText.setGravity(android.view.Gravity.CENTER);
-    voiceStatusText.setPadding(0, 0, 0, 30);
+    voiceStatusText.setPadding(0, 0, 0, 20);
     dialogLayout.addView(voiceStatusText);
     
-    // Command text
+    // Current command text (larger, prominent)
     voiceCommandText = new TextView(requireContext());
     voiceCommandText.setText("Say a command...");
     voiceCommandText.setTextSize(16);
     voiceCommandText.setTextColor(0xFFFFFFFF);
     voiceCommandText.setGravity(android.view.Gravity.CENTER);
-    voiceCommandText.setMinHeight(100);
+    voiceCommandText.setAlpha(0.7f);
+    voiceCommandText.setMinHeight(60);
     dialogLayout.addView(voiceCommandText);
     
-    // Close button
-    android.widget.Button closeButton = new android.widget.Button(requireContext());
-    closeButton.setText("Stop Listening");
-    closeButton.setOnClickListener(v -> stopVoiceSession());
-    android.widget.LinearLayout.LayoutParams buttonParams = new android.widget.LinearLayout.LayoutParams(
+    // Separator line
+    View separator = new View(requireContext());
+    android.widget.LinearLayout.LayoutParams sepParams = new android.widget.LinearLayout.LayoutParams(
+        android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 1
+    );
+    sepParams.topMargin = 30;
+    sepParams.bottomMargin = 20;
+    separator.setLayoutParams(sepParams);
+    separator.setBackgroundColor(0xFF3A3A3C);
+    dialogLayout.addView(separator);
+    
+    // Command history scroll view
+    android.widget.ScrollView historyScroll = new android.widget.ScrollView(requireContext());
+    android.widget.LinearLayout.LayoutParams scrollParams = new android.widget.LinearLayout.LayoutParams(
+        android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+        300
+    );
+    historyScroll.setLayoutParams(scrollParams);
+    
+    commandHistoryText = new TextView(requireContext());
+    commandHistoryText.setText("Command history will appear here...");
+    commandHistoryText.setTextSize(12);
+    commandHistoryText.setTextColor(0xFF9E9E9E);
+    commandHistoryText.setPadding(20, 0, 20, 0);
+    historyScroll.addView(commandHistoryText);
+    dialogLayout.addView(historyScroll);
+    
+    // Stop button with premium styling
+    androidx.cardview.widget.CardView stopButtonCard = new androidx.cardview.widget.CardView(requireContext());
+    android.widget.LinearLayout.LayoutParams cardParams = new android.widget.LinearLayout.LayoutParams(
         android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
         android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
     );
-    buttonParams.topMargin = 40;
-    closeButton.setLayoutParams(buttonParams);
-    dialogLayout.addView(closeButton);
+    cardParams.topMargin = 30;
+    cardParams.gravity = android.view.Gravity.CENTER;
+    stopButtonCard.setLayoutParams(cardParams);
+    stopButtonCard.setCardBackgroundColor(0xFFFF3B30);
+    stopButtonCard.setRadius(20);
+    stopButtonCard.setCardElevation(0);
+    stopButtonCard.setForeground(requireContext().getDrawable(android.R.drawable.list_selector_background));
+    stopButtonCard.setClickable(true);
+    stopButtonCard.setFocusable(true);
+    stopButtonCard.setOnClickListener(v -> stopVoiceSession());
+    
+    TextView stopButtonText = new TextView(requireContext());
+    stopButtonText.setText("Stop Listening");
+    stopButtonText.setTextSize(14);
+    stopButtonText.setTextColor(0xFFFFFFFF);
+    stopButtonText.setTextStyle(android.graphics.Typeface.BOLD);
+    stopButtonText.setPadding(40, 20, 40, 20);
+    stopButtonText.setGravity(android.view.Gravity.CENTER);
+    stopButtonCard.addView(stopButtonText);
+    dialogLayout.addView(stopButtonCard);
     
     builder.setView(dialogLayout);
     builder.setCancelable(true);
     builder.setOnCancelListener(dialog -> stopVoiceSession());
     
     voiceSessionDialog = builder.create();
-    voiceSessionDialog.getWindow().setBackgroundDrawableResource(android.R.drawable.dialog_holo_dark_frame);
+    if (voiceSessionDialog.getWindow() != null) {
+      voiceSessionDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    }
     voiceSessionDialog.show();
     
     isVoiceSessionActive = true;
@@ -516,13 +601,25 @@ public class PremiumControllerFragment extends Fragment {
   }
   
   private void startListening() {
+    if (isListening) {
+      Log.w(TAG, "Already listening, skipping duplicate startListening call");
+      return;
+    }
+    
     Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
     intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
     intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
     intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+    intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false);
     
-    speechRecognizer.startListening(intent);
-    isListening = true;
+    try {
+      speechRecognizer.startListening(intent);
+      isListening = true;
+      Log.d(TAG, "Started listening");
+    } catch (Exception e) {
+      Log.e(TAG, "Error starting speech recognition", e);
+      isListening = false;
+    }
   }
   
   private void stopListening() {
