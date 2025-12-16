@@ -116,27 +116,30 @@ public class PremiumControllerFragment extends Fragment {
   @Override
   public void onStart() {
     super.onStart();
-    // Check connection status when the fragment becomes visible
+    // Poll for connection status - the native layer handles auto-reconnect in CastingApp.start()
+    // which is already called in MainActivity, so we just need to wait and check
     handler.post(
         new Runnable() {
           private int pollCount = 0;
-          private final int MAX_POLLS = 20; // Poll for 10 seconds
+          private final int MAX_POLLS = 30; // Poll for 15 seconds
 
           @Override
           public void run() {
-            if (isConnectedToCastingPlayer()) {
-              Log.i(TAG, "onStart: Already connected to a CastingPlayer.");
+            boolean connected = isConnectedToCastingPlayer();
+            Log.d(TAG, "onStart poll #" + pollCount + ": connected=" + connected);
+            
+            if (connected) {
+              Log.i(TAG, "onStart: Connected to CastingPlayer");
+              updateConnectionStatus();
+              // Stop polling once connected
+            } else if (pollCount < MAX_POLLS) {
+              pollCount++;
+              handler.postDelayed(this, 500); // Poll every 500ms
               updateConnectionStatus();
             } else {
-              Log.i(TAG, "onStart: Not connected, attempting to reconnect.");
-              com.matter.casting.core.CastingApp.getInstance().start();
-              if (pollCount < MAX_POLLS) {
-                pollCount++;
-                Log.d(TAG, "onStart: Reconnect poll #" + pollCount);
-                handler.postDelayed(this, 500); // Poll every 500ms
-              }
+              Log.i(TAG, "onStart: Gave up waiting for connection after " + (MAX_POLLS * 500) + "ms");
+              updateConnectionStatus();
             }
-            updateConnectionStatus();
           }
         });
   }
@@ -331,38 +334,21 @@ public class PremiumControllerFragment extends Fragment {
   }
   
   private void disconnectFromCastingPlayer() {
-    new Thread(
-            () -> {
-              Log.i(TAG, "Disconnecting from casting player");
+    Log.i(TAG, "Disconnecting from casting player");
 
-              // Stop the Matter Keep Alive Service
-              Intent serviceIntent = new Intent(requireActivity(), MatterKeepAliveService.class);
-              requireActivity().stopService(serviceIntent);
+    // Clear the cache to force re-pairing next time
+    com.matter.casting.support.MatterError err =
+        com.matter.casting.core.CastingApp.getInstance().clearCache();
+    if (err.hasError()) {
+      Log.e(TAG, "Failed to clear cache: " + err.getErrorMessage());
+      Toast.makeText(getContext(), "Failed to disconnect", Toast.LENGTH_SHORT).show();
+    } else {
+      Log.i(TAG, "Cache cleared successfully");
+      Toast.makeText(getContext(), "Disconnected from TV. Please re-pair.", Toast.LENGTH_LONG).show();
+    }
 
-              // Stop the CastingApp to terminate the session
-              com.matter.casting.core.CastingApp.getInstance().stop();
-
-              // Clear the cache to force re-pairing next time
-              com.matter.casting.support.MatterError err =
-                  com.matter.casting.core.CastingApp.getInstance().clearCache();
-              if (err.hasError()) {
-                Log.e(TAG, "Failed to clear cache: " + err.getErrorMessage());
-              } else {
-                Log.i(TAG, "Cache cleared successfully");
-              }
-
-              // Update UI
-              if (getActivity() != null) {
-                getActivity()
-                    .runOnUiThread(
-                        () -> {
-                          updateConnectionStatus();
-                          Toast.makeText(getContext(), "Disconnected from TV", Toast.LENGTH_SHORT)
-                              .show();
-                        });
-              }
-            })
-        .start();
+    // Update UI
+    updateConnectionStatus();
   }
   
   // ========== VOICE INPUT ==========
