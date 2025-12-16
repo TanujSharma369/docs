@@ -109,6 +109,34 @@ public class PremiumControllerFragment extends Fragment {
   }
 
   @Override
+  public void onStart() {
+    super.onStart();
+    // Check connection status when the fragment becomes visible
+    handler.post(
+        new Runnable() {
+          private int pollCount = 0;
+          private final int MAX_POLLS = 20; // Poll for 10 seconds
+
+          @Override
+          public void run() {
+            if (isConnectedToCastingPlayer()) {
+              Log.i(TAG, "onStart: Already connected to a CastingPlayer.");
+              updateConnectionStatus();
+            } else {
+              Log.i(TAG, "onStart: Not connected, attempting to reconnect.");
+              CastingApp.getInstance().start();
+              if (pollCount < MAX_POLLS) {
+                pollCount++;
+                Log.d(TAG, "onStart: Reconnect poll #" + pollCount);
+                handler.postDelayed(this, 500); // Poll every 500ms
+              }
+            }
+            updateConnectionStatus();
+          }
+        });
+  }
+
+  @Override
   public void onResume() {
     super.onResume();
     
