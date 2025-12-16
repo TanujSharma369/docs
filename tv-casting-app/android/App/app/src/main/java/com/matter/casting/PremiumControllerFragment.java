@@ -116,20 +116,25 @@ public class PremiumControllerFragment extends Fragment {
   @Override
   public void onStart() {
     super.onStart();
+    Log.i(TAG, "onStart() - starting connection status polling");
     // Poll for connection status - the native layer handles auto-reconnect in CastingApp.start()
     // which is already called in MainActivity, so we just need to wait and check
-    handler.post(
+    handler.postDelayed(
         new Runnable() {
           private int pollCount = 0;
-          private final int MAX_POLLS = 30; // Poll for 15 seconds
+          private final int MAX_POLLS = 120; // Poll for 60 seconds (increased from 15s)
 
           @Override
           public void run() {
             boolean connected = isConnectedToCastingPlayer();
-            Log.d(TAG, "onStart poll #" + pollCount + ": connected=" + connected);
+            
+            if (pollCount % 10 == 0 || connected) {
+              // Log every 5 seconds or when connected
+              Log.i(TAG, "onStart poll #" + pollCount + ": connected=" + connected);
+            }
             
             if (connected) {
-              Log.i(TAG, "onStart: Connected to CastingPlayer");
+              Log.i(TAG, "onStart: Connected to CastingPlayer after " + (pollCount * 500) + "ms");
               updateConnectionStatus();
               // Stop polling once connected
             } else if (pollCount < MAX_POLLS) {
@@ -137,11 +142,12 @@ public class PremiumControllerFragment extends Fragment {
               handler.postDelayed(this, 500); // Poll every 500ms
               updateConnectionStatus();
             } else {
-              Log.i(TAG, "onStart: Gave up waiting for connection after " + (MAX_POLLS * 500) + "ms");
+              Log.w(TAG, "onStart: Gave up waiting for connection after " + (MAX_POLLS * 500) + "ms");
               updateConnectionStatus();
             }
           }
-        });
+        },
+        1000); // Wait 1 second before starting to poll
   }
 
   @Override
@@ -198,21 +204,12 @@ public class PremiumControllerFragment extends Fragment {
     statusIndicator = view.findViewById(R.id.statusIndicator);
     statusLabel = view.findViewById(R.id.statusLabel);
     pairButton = view.findViewById(R.id.pairButton);
-    View disconnectButton = view.findViewById(R.id.disconnectButton);
     
     // Setup pair button click with haptics
     pairButton.setOnClickListener(v -> {
       hapticFeedback(v, true);
       showCommissioningDialog();
     });
-    
-    // Setup disconnect button
-    if (disconnectButton != null) {
-      disconnectButton.setOnClickListener(v -> {
-        hapticFeedback(v, false);
-        disconnectFromCastingPlayer();
-      });
-    }
   }
   
   /**
@@ -331,24 +328,6 @@ public class PremiumControllerFragment extends Fragment {
         }
       });
     }).start();
-  }
-  
-  private void disconnectFromCastingPlayer() {
-    Log.i(TAG, "Disconnecting from casting player");
-
-    // Clear the cache to force re-pairing next time
-    com.matter.casting.support.MatterError err =
-        com.matter.casting.core.CastingApp.getInstance().clearCache();
-    if (err.hasError()) {
-      Log.e(TAG, "Failed to clear cache: " + err.getErrorMessage());
-      Toast.makeText(getContext(), "Failed to disconnect", Toast.LENGTH_SHORT).show();
-    } else {
-      Log.i(TAG, "Cache cleared successfully");
-      Toast.makeText(getContext(), "Disconnected from TV. Please re-pair.", Toast.LENGTH_LONG).show();
-    }
-
-    // Update UI
-    updateConnectionStatus();
   }
   
   // ========== VOICE INPUT ==========
