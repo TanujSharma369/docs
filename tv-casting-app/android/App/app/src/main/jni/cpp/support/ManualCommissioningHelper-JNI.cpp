@@ -298,20 +298,21 @@ JNI_METHOD(jobject, attemptReconnectToLastPlayer)(JNIEnv * env, jclass)
     {
         ChipLogProgress(AppServer, "ManualCommissioningHelper::attemptReconnectToLastPlayer() Found cached player, verifying/establishing connection");
         
+        // Create ConnectionCallbacks struct
+        matter::casting::core::ConnectionCallbacks callbacks;
+        callbacks.mOnConnectionComplete = [](CHIP_ERROR err, matter::casting::core::CastingPlayer * player) {
+            if (err == CHIP_NO_ERROR)
+            {
+                ChipLogProgress(AppServer, "ManualCommissioningHelper: Reconnection successful!");
+            }
+            else
+            {
+                ChipLogError(AppServer, "ManualCommissioningHelper: Reconnection failed: %" CHIP_ERROR_FORMAT, err.Format());
+            }
+        };
+        
         // VerifyOrEstablishConnection will check if we have an active session and re-establish if needed
-        targetPlayer->VerifyOrEstablishConnection(
-            [](CHIP_ERROR err) {
-                if (err == CHIP_NO_ERROR)
-                {
-                    ChipLogProgress(AppServer, "ManualCommissioningHelper: Reconnection successful!");
-                }
-                else
-                {
-                    ChipLogError(AppServer, "ManualCommissioningHelper: Reconnection failed: %" CHIP_ERROR_FORMAT, err.Format());
-                }
-            },
-            matter::casting::core::kCommissioningWindowTimeoutSec
-        );
+        targetPlayer->VerifyOrEstablishConnection(callbacks, matter::casting::core::kCommissioningWindowTimeoutSec);
         
         return matter::casting::support::convertMatterErrorFromCppToJava(CHIP_NO_ERROR);
     }
@@ -321,4 +322,5 @@ JNI_METHOD(jobject, attemptReconnectToLastPlayer)(JNIEnv * env, jclass)
         return matter::casting::support::convertMatterErrorFromCppToJava(CHIP_ERROR_INCORRECT_STATE);
     }
 }
+
 
