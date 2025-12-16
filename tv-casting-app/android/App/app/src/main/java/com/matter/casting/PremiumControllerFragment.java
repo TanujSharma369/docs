@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.speech.RecognitionListener;
@@ -51,6 +53,9 @@ public class PremiumControllerFragment extends Fragment {
   private Animation pressAnim;
   private Animation releaseAnim;
   private Animation glowAnim;
+  
+  // Handler for polling connection status
+  private final Handler handler = new Handler(Looper.getMainLooper());
   
   // CEC Key Codes
   private static final int KEY_SELECT = 0;
@@ -124,7 +129,7 @@ public class PremiumControllerFragment extends Fragment {
               updateConnectionStatus();
             } else {
               Log.i(TAG, "onStart: Not connected, attempting to reconnect.");
-              CastingApp.getInstance().start();
+              com.matter.casting.core.CastingApp.getInstance().start();
               if (pollCount < MAX_POLLS) {
                 pollCount++;
                 Log.d(TAG, "onStart: Reconnect poll #" + pollCount);
@@ -330,12 +335,12 @@ public class PremiumControllerFragment extends Fragment {
             () -> {
               Log.i(TAG, "Disconnecting from casting player");
 
-              // Stop the Matter Casting Service
-              Intent serviceIntent = new Intent(requireActivity(), MatterCastingService.class);
+              // Stop the Matter Keep Alive Service
+              Intent serviceIntent = new Intent(requireActivity(), MatterKeepAliveService.class);
               requireActivity().stopService(serviceIntent);
 
               // Stop the CastingApp to terminate the session
-              CastingApp.getInstance().stop();
+              com.matter.casting.core.CastingApp.getInstance().stop();
 
               // Clear the cache to force re-pairing next time
               com.matter.casting.support.MatterError err =
