@@ -210,22 +210,9 @@ public class PremiumControllerFragment extends Fragment {
   }
   
   private boolean isConnectedToCastingPlayer() {
-    try {
-      // Use the discovery API to get all casting players and check their connection state
-      List<com.matter.casting.core.CastingPlayer> players = 
-          com.matter.casting.core.MatterCastingPlayerDiscovery.getInstance().getCastingPlayers();
-      if (players != null && !players.isEmpty()) {
-        for (com.matter.casting.core.CastingPlayer player : players) {
-          if (player.getConnectionState() == com.matter.casting.core.CastingPlayer.ConnectionState.CONNECTED) {
-            Log.i(TAG, "Found connected CastingPlayer: " + player.getDeviceName());
-            return true;
-          }
-        }
-      }
-    } catch (Exception e) {
-      Log.e(TAG, "Error checking connection status", e);
-    }
-    return false;
+    // Use ManualCommissioningHelper to check if we have a commissioned player
+    // This reliably tracks the commissioned state even after discovery stops
+    return ManualCommissioningHelper.hasCommissionedVideoPlayer();
   }
   
   private void startConnectionMonitoring() {
