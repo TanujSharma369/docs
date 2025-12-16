@@ -162,12 +162,21 @@ public class PremiumControllerFragment extends Fragment {
     statusIndicator = view.findViewById(R.id.statusIndicator);
     statusLabel = view.findViewById(R.id.statusLabel);
     pairButton = view.findViewById(R.id.pairButton);
+    View disconnectButton = view.findViewById(R.id.disconnectButton);
     
     // Setup pair button click with haptics
     pairButton.setOnClickListener(v -> {
       hapticFeedback(v, true);
       showCommissioningDialog();
     });
+    
+    // Setup disconnect button
+    if (disconnectButton != null) {
+      disconnectButton.setOnClickListener(v -> {
+        hapticFeedback(v, false);
+        disconnectFromCastingPlayer();
+      });
+    }
   }
   
   /**
@@ -284,6 +293,33 @@ public class PremiumControllerFragment extends Fragment {
           statusText.setText("Error: " + err.getErrorMessage());
           statusText.setTextColor(0xFFFF3B30);
         }
+      });
+    }).start();
+  }
+  
+  private void disconnectFromCastingPlayer() {
+    new Thread(() -> {
+      Log.i(TAG, "Disconnecting from CastingPlayer");
+      
+      // Stop the foreground service
+      getActivity().runOnUiThread(() -> {
+        Intent serviceIntent = new Intent(getContext(), MatterKeepAliveService.class);
+        getContext().stopService(serviceIntent);
+        Log.i(TAG, "Stopped MatterKeepAliveService");
+      });
+      
+      // Clear the cache to force re-pairing next time
+      com.matter.casting.support.MatterError err = com.matter.casting.core.CastingApp.getInstance().clearCache();
+      if (err.hasError()) {
+        Log.e(TAG, "Failed to clear cache: " + err.getErrorMessage());
+      } else {
+        Log.i(TAG, "Cache cleared successfully");
+      }
+      
+      // Update UI
+      getActivity().runOnUiThread(() -> {
+        updateConnectionStatus();
+        Toast.makeText(getContext(), "Disconnected from TV", Toast.LENGTH_SHORT).show();
       });
     }).start();
   }
