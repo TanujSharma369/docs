@@ -298,30 +298,38 @@ public class PremiumControllerFragment extends Fragment {
   }
   
   private void disconnectFromCastingPlayer() {
-    new Thread(() -> {
-      Log.i(TAG, "Disconnecting from CastingPlayer");
-      
-      // Stop the foreground service
-      getActivity().runOnUiThread(() -> {
-        Intent serviceIntent = new Intent(getContext(), MatterKeepAliveService.class);
-        getContext().stopService(serviceIntent);
-        Log.i(TAG, "Stopped MatterKeepAliveService");
-      });
-      
-      // Clear the cache to force re-pairing next time
-      com.matter.casting.support.MatterError err = com.matter.casting.core.CastingApp.getInstance().clearCache();
-      if (err.hasError()) {
-        Log.e(TAG, "Failed to clear cache: " + err.getErrorMessage());
-      } else {
-        Log.i(TAG, "Cache cleared successfully");
-      }
-      
-      // Update UI
-      getActivity().runOnUiThread(() -> {
-        updateConnectionStatus();
-        Toast.makeText(getContext(), "Disconnected from TV", Toast.LENGTH_SHORT).show();
-      });
-    }).start();
+    new Thread(
+            () -> {
+              Log.i(TAG, "Disconnecting from casting player");
+
+              // Stop the Matter Casting Service
+              Intent serviceIntent = new Intent(requireActivity(), MatterCastingService.class);
+              requireActivity().stopService(serviceIntent);
+
+              // Stop the CastingApp to terminate the session
+              CastingApp.getInstance().stop();
+
+              // Clear the cache to force re-pairing next time
+              com.matter.casting.support.MatterError err =
+                  com.matter.casting.core.CastingApp.getInstance().clearCache();
+              if (err.hasError()) {
+                Log.e(TAG, "Failed to clear cache: " + err.getErrorMessage());
+              } else {
+                Log.i(TAG, "Cache cleared successfully");
+              }
+
+              // Update UI
+              if (getActivity() != null) {
+                getActivity()
+                    .runOnUiThread(
+                        () -> {
+                          updateConnectionStatus();
+                          Toast.makeText(getContext(), "Disconnected from TV", Toast.LENGTH_SHORT)
+                              .show();
+                        });
+              }
+            })
+        .start();
   }
   
   // ========== VOICE INPUT ==========
