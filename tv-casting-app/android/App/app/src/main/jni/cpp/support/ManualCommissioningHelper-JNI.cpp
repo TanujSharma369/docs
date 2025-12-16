@@ -184,8 +184,16 @@ JNI_METHOD(jboolean, hasCommissionedVideoPlayer)(JNIEnv * env, jclass)
     chip::DeviceLayer::StackLock lock;
     ChipLogProgress(AppServer, "ManualCommissioningHelper::hasCommissionedVideoPlayer() called");
     
-    bool hasPlayer = (gCommissionedVideoPlayer != nullptr);
-    ChipLogProgress(AppServer, "ManualCommissioningHelper::hasCommissionedVideoPlayer() returns: %s", hasPlayer ? "true" : "false");
+    // Check both the legacy gCommissionedVideoPlayer (set via manual commissioning)
+    // and the new CastingPlayer API (set during auto-reconnect)
+    bool hasLegacyPlayer = (gCommissionedVideoPlayer != nullptr);
+    bool hasTargetPlayer = (matter::casting::core::CastingPlayer::GetTargetCastingPlayer() != nullptr);
+    bool hasPlayer = hasLegacyPlayer || hasTargetPlayer;
+    
+    ChipLogProgress(AppServer, "ManualCommissioningHelper::hasCommissionedVideoPlayer() legacy=%s, target=%s, result=%s", 
+                    hasLegacyPlayer ? "true" : "false",
+                    hasTargetPlayer ? "true" : "false",
+                    hasPlayer ? "true" : "false");
     
     return hasPlayer ? JNI_TRUE : JNI_FALSE;
 }
