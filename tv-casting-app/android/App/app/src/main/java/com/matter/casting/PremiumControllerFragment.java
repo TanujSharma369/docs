@@ -122,7 +122,30 @@ public class PremiumControllerFragment extends Fragment {
     // CastingApp.start() is already called in MainActivity.onCreate() which handles auto-reconnect
     updateConnectionStatus();
     
-    // Start foreground service to keep Matter stack alive in background if connected
+    // Poll more aggressively for the first 10 seconds after resume to catch auto-reconnect
+    final android.os.Handler reconnectHandler = new android.os.Handler();
+    final int[] pollCount = {0};
+    reconnectHandler.postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        Log.d(TAG, "Aggressive reconnect poll #" + pollCount[0]);
+        updateConnectionStatus();
+        pollCount[0]++;
+        if (pollCount[0] < 10 && !isConnectedToCastingPlayer()) {
+          reconnectHandler.postDelayed(this, 1000); // Check every 1 second for 10 seconds
+        } else if (isConnectedToCastingPlayer()) {
+          Log.i(TAG, "Connection detected, starting foreground service");
+          Intent serviceIntent = new Intent(getContext(), MatterKeepAliveService.class);
+          if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            getContext().startForegroundService(serviceIntent);
+          } else {
+            getContext().startService(serviceIntent);
+          }
+        }
+      }
+    }, 1000);
+    
+    // Start foreground service to keep Matter stack alive if already connected
     if (isConnectedToCastingPlayer()) {
       Intent serviceIntent = new Intent(getContext(), MatterKeepAliveService.class);
       if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -203,7 +226,9 @@ public class PremiumControllerFragment extends Fragment {
   private boolean isConnectedToCastingPlayer() {
     // Use ManualCommissioningHelper to check if we have a commissioned player
     // This reliably tracks the commissioned state even after discovery stops
-    return ManualCommissioningHelper.hasCommissionedVideoPlayer();
+    boolean hasCommissioned = ManualCommissioningHelper.hasCommissionedVideoPlayer();
+    Log.d(TAG, "isConnectedToCastingPlayer: hasCommissionedVideoPlayer=" + hasCommissioned);
+    return hasCommissioned;
   }
   
   private void startConnectionMonitoring() {
