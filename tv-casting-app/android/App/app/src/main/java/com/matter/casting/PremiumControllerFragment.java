@@ -46,7 +46,7 @@ public class PremiumControllerFragment extends Fragment {
   private View pairButton;
   private View powerButton;
   private android.widget.ImageView powerIcon;
-  private boolean isPowerOn = true; // Track power state - default ON since connected TV is powered on
+  private boolean isPowerOn = false; // Track power state - synced with connection status
   private android.app.AlertDialog commissioningDialog;
   private android.app.AlertDialog voiceSessionDialog;
   private SpeechRecognizer speechRecognizer;
@@ -345,7 +345,7 @@ public class PremiumControllerFragment extends Fragment {
       statusLabel.setText("Connected");
       Log.i(TAG, "UI updated: Connected to CastingPlayer");
       
-      // When connected, TV is ON - sync power button state
+      // When connected, assume TV is ON - set power button to green
       if (!isPowerOn) {
         isPowerOn = true;
         updatePowerButtonState();
@@ -354,6 +354,12 @@ public class PremiumControllerFragment extends Fragment {
       statusIndicator.setImageResource(R.drawable.indicator_disconnected);
       statusLabel.setText("Disconnected");
       Log.i(TAG, "UI updated: Disconnected from CastingPlayer");
+      
+      // When disconnected, reset power state to OFF - set power button to red
+      if (isPowerOn) {
+        isPowerOn = false;
+        updatePowerButtonState();
+      }
     }
   }
   
