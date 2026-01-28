@@ -44,6 +44,9 @@ public class PremiumControllerFragment extends Fragment {
   private android.widget.ImageView statusIndicator;
   private TextView statusLabel;
   private View pairButton;
+  private View powerButton;
+  private android.widget.ImageView powerIcon;
+  private boolean isPowerOn = false; // Track power state
   private android.app.AlertDialog commissioningDialog;
   private android.app.AlertDialog voiceSessionDialog;
   private SpeechRecognizer speechRecognizer;
@@ -71,6 +74,7 @@ public class PremiumControllerFragment extends Fragment {
   private static final int KEY_RIGHT = 4;
   private static final int KEY_ROOT_MENU = 9;
   private static final int KEY_EXIT = 13;
+  private static final int KEY_POWER = 64;
   private static final int KEY_VOLUME_UP = 65;
   private static final int KEY_VOLUME_DOWN = 66;
   private static final int KEY_NUMBER_0 = 32;
@@ -223,12 +227,75 @@ public class PremiumControllerFragment extends Fragment {
     statusIndicator = view.findViewById(R.id.statusIndicator);
     statusLabel = view.findViewById(R.id.statusLabel);
     pairButton = view.findViewById(R.id.pairButton);
+    powerButton = view.findViewById(R.id.powerButton);
+    powerIcon = view.findViewById(R.id.powerIcon);
     
     // Setup pair button click with haptics
     pairButton.setOnClickListener(v -> {
       hapticFeedback(v, true);
       showCommissioningDialog();
     });
+    
+    // Setup power button click with haptics and state toggle
+    powerButton.setOnClickListener(v -> {
+      hapticFeedback(v, true);
+      togglePower();
+    });
+    
+    // Initialize power button color (red = off by default)
+    updatePowerButtonState();
+  }
+  
+  /**
+   * Toggle power state and send power key command to device
+   */
+  private void togglePower() {
+    if (!ManualCommissioningHelper.hasCommissionedVideoPlayer()) {
+      Toast.makeText(getContext(), "Connect device first", Toast.LENGTH_SHORT).show();
+      return;
+    }
+    
+    // Toggle power state
+    isPowerOn = !isPowerOn;
+    
+    // Update button appearance
+    updatePowerButtonState();
+    
+    // Send power key command to device
+    new Thread(() -> {
+      boolean success = sendKeyToDevice(KEY_POWER);
+      if (getActivity() != null) {
+        getActivity().runOnUiThread(() -> {
+          if (success) {
+            String state = isPowerOn ? "ON" : "OFF";
+            Toast.makeText(getContext(), "Power " + state, Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Power toggled to: " + state);
+          } else {
+            // Revert state on failure
+            isPowerOn = !isPowerOn;
+            updatePowerButtonState();
+            Toast.makeText(getContext(), "Failed to send power command", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Failed to send power command");
+          }
+        });
+      }
+    }).start();
+  }
+  
+  /**
+   * Update power button icon color based on current power state
+   * Green = ON, Red = OFF
+   */
+  private void updatePowerButtonState() {
+    if (powerIcon != null) {
+      if (isPowerOn) {
+        // Green for power ON
+        powerIcon.setColorFilter(0xFF30D158); // Green color
+      } else {
+        // Red for power OFF
+        powerIcon.setColorFilter(0xFFFF3B30); // Red color
+      }
+    }
   }
   
   /**
@@ -662,6 +729,10 @@ public class PremiumControllerFragment extends Fragment {
       sendKey(KEY_VOLUME_UP, "Volume Up");
     } else if (lowerCommand.contains("volume down") || lowerCommand.contains("quieter")) {
       sendKey(KEY_VOLUME_DOWN, "Volume Down");
+    }
+    // Power commands
+    else if (lowerCommand.contains("power") || lowerCommand.contains("turn on") || lowerCommand.contains("turn off")) {
+      togglePower();
     }
     // Number commands
     else if (lowerCommand.matches(".*\\b(zero|0)\\b.*")) {
