@@ -421,11 +421,10 @@ JNI_METHOD(jboolean, verifyConnectionAlive)(JNIEnv * env, jclass)
     if (testEndpoint == nullptr)
     {
         ChipLogProgress(AppServer, "ManualCommissioningHelper::verifyConnectionAlive() No KeypadInput endpoint found");
-        // If no KeypadInput cluster, try to check if we have any valid endpoints
-        for (size_t i = 0; i < kMaxNumberOfEndpoints && endpoints[i].IsInitialized(); i++)
+        // If no KeypadInput cluster, use the first valid endpoint
+        if (endpoints[0].IsInitialized())
         {
-            testEndpoint = &endpoints[i];
-            break;
+            testEndpoint = &endpoints[0];
         }
         if (testEndpoint == nullptr)
         {
