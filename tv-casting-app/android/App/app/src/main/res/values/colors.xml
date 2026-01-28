@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- Matte Black Theme Colors -->
+    <color name="matte_black_primary">#1C1C1E</color>
+    <color name="matte_black_surface">#1F1F1F</color>
+    <color name="matte_black_card">#2C2C2C</color>
+    <color name="matte_black_status_bar">#1C1C1E</color>
+    <color name="accent_blue">#0A84FF</color>
 </resources>
