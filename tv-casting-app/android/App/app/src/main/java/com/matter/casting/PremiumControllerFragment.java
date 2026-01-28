@@ -359,10 +359,6 @@ public class PremiumControllerFragment extends Fragment {
     return hasCommissioned;
   }
   
-  // Counter for heartbeat checks
-  private int heartbeatCheckCounter = 0;
-  private static final int HEARTBEAT_CHECK_INTERVAL = 5; // Check every 5th monitoring cycle (10 seconds)
-  
   private void startConnectionMonitoring() {
     // Monitor connection status every 2 seconds
     final android.os.Handler handler = new android.os.Handler();
@@ -376,69 +372,9 @@ public class PremiumControllerFragment extends Fragment {
           commissioningDialog.dismiss();
           Toast.makeText(getContext(), "Device paired successfully!", Toast.LENGTH_SHORT).show();
         }
-        
-        // Perform heartbeat verification every HEARTBEAT_CHECK_INTERVAL cycles
-        // This detects when TV removes/decommissions the app
-        heartbeatCheckCounter++;
-        if (heartbeatCheckCounter >= HEARTBEAT_CHECK_INTERVAL && isConnectedToCastingPlayer()) {
-          heartbeatCheckCounter = 0;
-          performHeartbeatVerification();
-        }
-        
         handler.postDelayed(this, 2000);
       }
     }, 2000);
-  }
-  
-  /**
-   * Performs a heartbeat verification to detect if the TV has removed this device.
-   * Runs on a background thread to avoid blocking the UI.
-   */
-  private void performHeartbeatVerification() {
-    new Thread(() -> {
-      Log.i(TAG, "Performing heartbeat verification...");
-      
-      try {
-        boolean isAlive = ManualCommissioningHelper.verifyConnectionAlive();
-        
-        if (getActivity() != null) {
-          getActivity().runOnUiThread(() -> {
-            if (!isAlive) {
-              Log.w(TAG, "Heartbeat verification FAILED - TV may have removed this device");
-              handleDisconnectionDetected();
-            } else {
-              Log.d(TAG, "Heartbeat verification SUCCESS - connection still alive");
-            }
-          });
-        }
-      } catch (Exception e) {
-        Log.e(TAG, "Exception during heartbeat verification", e);
-        if (getActivity() != null) {
-          getActivity().runOnUiThread(() -> handleDisconnectionDetected());
-        }
-      }
-    }).start();
-  }
-  
-  /**
-   * Called when we detect the TV has disconnected/removed this device.
-   * Clears local state and updates UI.
-   */
-  private void handleDisconnectionDetected() {
-    Log.w(TAG, "Disconnection detected! Clearing commissioned player and updating UI.");
-    
-    // Clear the cached commissioned player
-    try {
-      ManualCommissioningHelper.clearCommissionedPlayer();
-    } catch (Exception e) {
-      Log.e(TAG, "Error clearing commissioned player", e);
-    }
-    
-    // Update UI to show disconnected
-    updateConnectionStatus();
-    
-    // Notify user
-    Toast.makeText(getContext(), "TV disconnected - device was removed", Toast.LENGTH_LONG).show();
   }
 
   private void showCommissioningDialog() {

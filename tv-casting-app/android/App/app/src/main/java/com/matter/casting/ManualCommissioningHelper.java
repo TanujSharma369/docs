@@ -104,21 +104,4 @@ public class ManualCommissioningHelper {
      * @return MatterError.NO_ERROR if reconnection started successfully
      */
     public static native MatterError attemptReconnectToLastPlayer();
-    
-    /**
-     * Verify that the connection to the commissioned TV is still active.
-     * This sends a heartbeat (read request) to the TV to check if it still recognizes this device.
-     * 
-     * Use this to detect when the TV has removed/decommissioned this app.
-     * If this returns false, the device was likely removed from the TV.
-     * 
-     * @return true if connection is verified active, false if TV has removed this device or connection lost
-     */
-    public static native boolean verifyConnectionAlive();
-    
-    /**
-     * Clear the locally cached commissioned player.
-     * Call this when connection verification fails to reset the local state.
-     */
-    public static native void clearCommissionedPlayer();
 }
